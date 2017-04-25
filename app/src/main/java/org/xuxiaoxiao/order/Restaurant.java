@@ -8,6 +8,12 @@ import cn.bmob.v3.BmobObject;
 
 public class Restaurant extends BmobObject {
     private String name;
+    private int rate;
+
+    public Restaurant(String name,int rate){
+        this.name = name;
+        this.rate = rate;
+    }
 
     public String getName() {
         return name;
@@ -16,4 +22,14 @@ public class Restaurant extends BmobObject {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+
 }
