@@ -1,33 +1,31 @@
 package org.xuxiaoxiao.order;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.widget.Toast;
 
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends UniversalFragmentActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected Fragment createFragment() {
+        return new MainFragment();
+    }
+    // 下面是跟权限有关的
+    @Override
+    protected String[] getDesiredPermissions() {
+        return (new String[]{WRITE_EXTERNAL_STORAGE});
+    }
 
-        Restaurant qianqian = new Restaurant();
-        qianqian.setName("qianqian");
-        qianqian.save(new SaveListener<String>() {
-            @Override
-            public void done(String objectId, BmobException e) {
-                if(e==null){
-                    Log.d("WQWQ","添加数据成功，返回objectId为："+objectId);
-//                    toast("添加数据成功，返回objectId为："+objectId);
-                }else{
-                    Log.d("WQWQ","创建数据失败：" + e.getMessage());
+    @Override
+    protected void onPermissionDenied() {
+        Toast.makeText(this, R.string.msg_sorry, Toast.LENGTH_LONG).show();
+        finish();
+    }
 
-//                    toast("创建数据失败：" + e.getMessage());
-                }
-            }
-        });
+    @Override
+    protected void onReady(Bundle state) {
+
     }
 }

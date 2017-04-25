@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Order</string>
+    <string name="msg_sorry">Sorry</string>
 </resources>
