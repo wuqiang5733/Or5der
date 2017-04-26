@@ -84,40 +84,7 @@ public class MainFragment extends Fragment {
         restaurantRecyclerView.setAdapter(restaurantAdapter);
         return view;
     }
-/*
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Fetch data from website
-                BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
-                query.setLimit(10);
-                query.findObjects(new FindListener<Restaurant>() {
-                    @Override
-                    public void done(List<Restaurant> object, BmobException e) {
-                        if (e == null) {
-                            // Success
-                            for (Restaurant restaurant : object) {
-//                                restaurant.getName();
-//                                restaurant.getObjectId();
-//                                restaurant.getCreatedAt();
-                                restaurants.add(new Restaurant(restaurant.getName(), restaurant.getRate()));
-                                restaurantAdapter.notifyDataSetChanged();
-                            }
-                        } else {
-                            // Fail
-                            Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                        }
-                    }
-                });
-            }
-        }).start();
-
-    }
-*/
     private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 

@@ -35,7 +35,7 @@ public class DishModelFragment extends android.support.v4.app.Fragment {
     private List<Dish> model =
             Collections.synchronizedList(new ArrayList<Dish>());
     private boolean isStarted = false;
-    String restaurantName ;
+//    String restaurantName ;
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
 
