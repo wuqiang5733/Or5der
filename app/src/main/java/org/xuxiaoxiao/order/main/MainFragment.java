@@ -14,12 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
+import org.xuxiaoxiao.order.infrastructure.OnRecyclerItemClickListener;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
 import org.xuxiaoxiao.order.infrastructure.RestaurantReadyEvent;
 import org.xuxiaoxiao.order.model.Restaurant;
@@ -82,6 +84,19 @@ public class MainFragment extends Fragment {
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantAdapter = new RestaurantAdapter(restaurants);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
+        restaurantRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(restaurantRecyclerView) {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder viewHolder) {
+
+            }
+
+            @Override
+            public void onItemLOngClick(RecyclerView.ViewHolder viewHolder) {
+//                viewHolder.getItemId();
+                Toast.makeText(getActivity(),String.valueOf(viewHolder.getItemId()),Toast.LENGTH_SHORT).show();
+
+            }
+        });
         return view;
     }
 
