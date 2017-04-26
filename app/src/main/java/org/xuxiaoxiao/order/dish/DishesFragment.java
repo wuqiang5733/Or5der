@@ -19,7 +19,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.infrastructure.DishReadyEvent;
-import org.xuxiaoxiao.order.infrastructure.WebImageView;
 import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
@@ -124,7 +123,7 @@ public class DishesFragment extends Fragment {
         TextView dishdiscription;
         TextView disPhotoUrl;
         ImageView disImage;
-        WebImageView imageView;
+//        WebImageView imageView;
         Dish dish;
 
 
@@ -137,7 +136,7 @@ public class DishesFragment extends Fragment {
             dishdiscription = (TextView) itemView.findViewById(R.id.dish_discription_text_view);
             disPhotoUrl = (TextView) itemView.findViewById(R.id.dish_photourl_text_view);
             disImage = (ImageView)itemView.findViewById(R.id.dish_image_view);
-            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
+//            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
 
         }
 
@@ -148,7 +147,7 @@ public class DishesFragment extends Fragment {
             dishdiscription.setText(dish.getDiscription());
 //            imageView.setPlaceholderImage(R.drawable.error);
 //            imageView.setImageUrl("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png");
-            Picasso.with(getActivity()).load("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png")
+            Picasso.with(getActivity()).load(dish.getPhotoUrl().getFileUrl())
                     .fit().centerCrop()
 //                    .placeholder(R.drawable.error)
                     .error(R.drawable.error).into(disImage);
