@@ -123,7 +123,7 @@ public class MainFragment extends Fragment {
 
         public RestaurantAdapter(ArrayList<Restaurant> restaurants) {
             this.restaurants = restaurants;
-            Log.d("WQWQ", String.valueOf(restaurants.size()));
+//            Log.d("WQWQ", String.valueOf(restaurants.size()));
         }
 
         @Override
@@ -162,6 +162,8 @@ public class MainFragment extends Fragment {
         @Override
         public void onClick(View v) {
             // 在Fragment 当中启动 一个putExtra的Intent
+//            EventBus.getDefault().post
+//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant.getName()));
             Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
             startActivity(intent);
         }

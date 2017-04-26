@@ -1,26 +1,25 @@
 package org.xuxiaoxiao.order.dish;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.infrastructure.DishReadyEvent;
 import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by WuQiang on 2017/4/26.
@@ -34,6 +33,30 @@ public class DishesFragment extends Fragment {
     GridLayoutManager gridLayoutManager;
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        EventBus.getDefault().unregister(this);
+
+        super.onDetach();
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(DishReadyEvent event) {
+//        Log.d("WQWQ","我执行了");
+        dishes.add(event.getDish());
+        dishesAdapter.notifyDataSetChanged();
+    }
+
+    public void setModel(ArrayList<Dish> model) {
+        this.dishes = model;
+    }
 
     public static DishesFragment newInstance(String restaurantName) {
         // 这个方法接收来自 Activity 的数据
@@ -66,6 +89,7 @@ public class DishesFragment extends Fragment {
         return view;
     }
 
+    /*
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -97,7 +121,7 @@ public class DishesFragment extends Fragment {
             }
         }).start();
     }
-
+*/
     private class DishesAdapter extends RecyclerView.Adapter<DishesViewHolder> {
         ArrayList<Dish> dishes = new ArrayList<>();
 
