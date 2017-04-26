@@ -1,12 +1,16 @@
 package org.xuxiaoxiao.order.dish;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,12 +33,20 @@ import java.util.ArrayList;
 
 public class DishesFragment extends Fragment {
     RecyclerView recyclerView;
-//    LinearLayoutManager linearLayoutManager;
+    //    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
     ArrayList<Dish> dishes = new ArrayList<>();
+    String restaurantName;
     GridLayoutManager gridLayoutManager;
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        restaurantName = getArguments().getString(RESTAURANT_NAME);
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -49,12 +61,18 @@ public class DishesFragment extends Fragment {
 
         super.onDetach();
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(DishReadyEvent event) {
 //        Log.d("WQWQ","我执行了");
         dishes.add(event.getDish());
         dishesAdapter.notifyDataSetChanged();
     }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEventMainThread(SendRstaurantNameEvent event) {
+//        restaurantName = event.getRestaurantName();
+//    }
 
     public void setModel(ArrayList<Dish> model) {
         this.dishes = model;
@@ -81,7 +99,7 @@ public class DishesFragment extends Fragment {
 //        linearLayoutManager = new LinearLayoutManager(getActivity());
 //        recyclerView.setLayoutManager(linearLayoutManager);
 
-        gridLayoutManager = new GridLayoutManager(getActivity(),2);
+        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setHasFixedSize(true);
 
         // 添加自定义分割线：可自定义分割线drawable
@@ -123,10 +141,8 @@ public class DishesFragment extends Fragment {
         TextView dishdiscription;
         TextView disPhotoUrl;
         ImageView disImage;
-//        WebImageView imageView;
+        //        WebImageView imageView;
         Dish dish;
-
-
 
 
         public DishesViewHolder(View itemView) {
@@ -135,7 +151,7 @@ public class DishesFragment extends Fragment {
             dishprice = (TextView) itemView.findViewById(R.id.dish_price_text_view);
             dishdiscription = (TextView) itemView.findViewById(R.id.dish_discription_text_view);
             disPhotoUrl = (TextView) itemView.findViewById(R.id.dish_photourl_text_view);
-            disImage = (ImageView)itemView.findViewById(R.id.dish_image_view);
+            disImage = (ImageView) itemView.findViewById(R.id.dish_image_view);
 //            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
 
         }
@@ -161,4 +177,23 @@ public class DishesFragment extends Fragment {
 //            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.new_restaurant, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_restaurant:
+                Intent intent = NewDishActivity.newIntent(getActivity(), restaurantName);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

@@ -184,30 +184,16 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_crime_list, menu);
-        // 根据指示器来决定要不要显示 Subtitle
-//        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
-//        if (mSubtitleVisible) {
-//            subtitleItem.setTitle(R.string.hide_subtitle);
-//        } else {
-//            subtitleItem.setTitle(R.string.show_subtitle);
-//        }
+        inflater.inflate(R.menu.new_restaurant, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.new_crime:
-                Intent intent = new Intent(getContext(),AddNewRestaurantActivity.class);
+            case R.id.new_restaurant:
+                Intent intent = new Intent(getContext(),NewRestaurantActivity.class);
                 startActivity(intent);
                 return true;
-//            case R.id.show_subtitle:
-//                // 显示 Subtitle
-//                mSubtitleVisible = !mSubtitleVisible;
-//                getActivity().invalidateOptionsMenu();
-//                updateSubtitle();
-//                // 返回 true 来指示不需要更进一步的处理了
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

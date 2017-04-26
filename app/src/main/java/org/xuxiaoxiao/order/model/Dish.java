@@ -11,12 +11,15 @@ public class Dish {
     private Integer price;  // 价格
     private String discription;
     private BmobFile photoUrl;
+    private String restaurantName;
 
-    public Dish(String name, Integer price, String discription, BmobFile photoUrl) {
+
+    public Dish(String name, Integer price, String discription, BmobFile photoUrl, String restaurantName) {
         this.name = name;
         this.price = price;
         this.discription = discription;
         this.photoUrl = photoUrl;
+        this.restaurantName = restaurantName;
     }
 
     public String getName() {
@@ -50,4 +53,13 @@ public class Dish {
     public void setPhotoUrl(BmobFile photoUrl) {
         this.photoUrl = photoUrl;
     }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
 }

@@ -73,6 +73,7 @@ public class DishModelFragment extends android.support.v4.app.Fragment {
             query.setLimit(10);
             // 获得来自 Activity 的数据
             final String restaurantName = getArguments().getString(RESTAURANT_NAME);
+//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurantName));
             query.addWhereEqualTo("restaurantName", restaurantName);
 //            Log.d("WQWQ",restaurantName);
 
@@ -84,7 +85,7 @@ public class DishModelFragment extends android.support.v4.app.Fragment {
                         for (Dish dish : object) {
                             if (!isInterrupted()) {
 //                                Log.d("WQWQ",restaurant.getName());
-                                model.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl()));
+                                model.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(),dish.getRestaurantName()));
                                 EventBus.getDefault().post(new DishReadyEvent(dish));
                             }
                         }
