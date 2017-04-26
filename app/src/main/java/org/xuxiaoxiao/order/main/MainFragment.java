@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
-import org.xuxiaoxiao.order.infrastructure.HorizontalDividerItemDecoration;
+import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
@@ -46,7 +46,9 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         restaurantRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_restaurant);
         Drawable divider = getResources().getDrawable(R.drawable.item_divider);
-        restaurantRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
+        // 添加自定义分割线：可自定义分割线drawable
+        restaurantRecyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL, 10, getResources().getColor(R.color.divide_gray_color)));
+//        restaurantRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
         linearLayoutManager = new LinearLayoutManager(getActivity());
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantAdapter = new RestaurantAdapter(restaurants);
