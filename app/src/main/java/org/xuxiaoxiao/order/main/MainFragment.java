@@ -21,12 +21,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
-import org.xuxiaoxiao.order.infrastructure.OnRecyclerItemClickListener;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
+import org.xuxiaoxiao.order.infrastructure.RecyclerViewClickListener2;
 import org.xuxiaoxiao.order.infrastructure.RestaurantReadyEvent;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
+
+import static org.xuxiaoxiao.order.R.layout.restaurant;
 
 /**
  * Created by WuQiang on 2017/4/25.
@@ -52,9 +54,10 @@ public class MainFragment extends Fragment {
 
         super.onDetach();
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(RestaurantReadyEvent event) {
-        Log.d("WQWQ","我执行了");
+        Log.d("WQWQ", "我执行了");
         restaurants.add(event.getRestaurant());
         restaurantAdapter.notifyDataSetChanged();
     }
@@ -77,26 +80,40 @@ public class MainFragment extends Fragment {
         restaurantRecyclerView.setHasFixedSize(true);
         Drawable divider = getResources().getDrawable(R.drawable.item_divider);
         // 添加自定义分割线：可自定义分割线drawable
-        restaurantRecyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.VERTICAL,20, Color.WHITE)); // 设置分割线
+        restaurantRecyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.VERTICAL, 20, Color.WHITE)); // 设置分割线
 //        restaurantRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
         linearLayoutManager = new LinearLayoutManager(getActivity());
 //        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // 设置线性布局为横向（默认为纵向）
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantAdapter = new RestaurantAdapter(restaurants);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
-        restaurantRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(restaurantRecyclerView) {
-            @Override
-            public void onItemClick(RecyclerView.ViewHolder viewHolder) {
+//        restaurantRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(restaurantRecyclerView) {
+//            @Override
+//            public void onItemClick(RecyclerView.ViewHolder viewHolder) {
+//
+//            }
+//
+//            @Override
+//            public void onItemLOngClick(RecyclerView.ViewHolder viewHolder) {
+////                viewHolder.getItemId();
+//                Toast.makeText(getActivity(),String.valueOf(viewHolder.getItemId()),Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+        restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
+                new RecyclerViewClickListener2.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
+                        startActivity(intent);
+                    }
 
-            }
-
-            @Override
-            public void onItemLOngClick(RecyclerView.ViewHolder viewHolder) {
-//                viewHolder.getItemId();
-                Toast.makeText(getActivity(),String.valueOf(viewHolder.getItemId()),Toast.LENGTH_SHORT).show();
-
-            }
-        });
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    }
+                }));
         return view;
     }
 
@@ -110,7 +127,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getActivity().getLayoutInflater().inflate(R.layout.restaurant, parent, false);
+            View view = getActivity().getLayoutInflater().inflate(restaurant, parent, false);
             return new RestaurantViewHolder(view);
         }
 
@@ -146,8 +163,8 @@ public class MainFragment extends Fragment {
             // 在Fragment 当中启动 一个putExtra的Intent
 //            EventBus.getDefault().post
 //            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant.getName()));
-            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
-            startActivity(intent);
+//            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
+//            startActivity(intent);
         }
 
         public void bind(Restaurant restaurant) {
