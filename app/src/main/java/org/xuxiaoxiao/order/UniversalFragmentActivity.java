@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
@@ -15,6 +16,11 @@ import java.util.ArrayList;
  */
 
 public abstract class UniversalFragmentActivity extends AppCompatActivity {
+
+    protected Fragment fragment;
+    protected FragmentManager supportFragmentManager;
+    protected FragmentTransaction fragmentTransaction;
+
     abstract protected String[] getDesiredPermissions();
 
     abstract protected void onPermissionDenied();
@@ -40,14 +46,17 @@ public abstract class UniversalFragmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
-        FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentById(R.id.top_fragment_container);
+        supportFragmentManager = getSupportFragmentManager();
+        fragmentTransaction = supportFragmentManager.beginTransaction();
+
+        fragment = supportFragmentManager.findFragmentById(R.id.top_fragment_container);
 
         if (fragment == null) {
             fragment = createFragment();
-            fm.beginTransaction()
+            fragmentTransaction
                     .add(R.id.top_fragment_container, fragment)
                     .commit();
+            // trans.add(android.R.id.content, demo);
         }
 
         this.state = savedInstanceState;

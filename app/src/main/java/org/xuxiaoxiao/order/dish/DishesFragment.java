@@ -145,10 +145,16 @@ public class DishesFragment extends Fragment {
             dishname.setText(dish.getName());
             dishprice.setText(String.valueOf(dish.getPrice()));
             dishdiscription.setText(dish.getDiscription());
-//            Picasso.with(getActivity())
-//                    .load("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png")
+//            Picasso.with(getActivity()).load("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png")
+//                    .fit().centerCrop()
 //                    .placeholder(R.drawable.error)
-//                    .error(R.drawable.error)
+//                    .error(R.drawable.error).into(disImage);
+//            Glide
+//                    .with(getActivity())
+//                    .load("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png")
+//                    .centerCrop()
+//                    .placeholder(R.drawable.error)
+//                    .crossFade()
 //                    .into(disImage);
 //            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
         }

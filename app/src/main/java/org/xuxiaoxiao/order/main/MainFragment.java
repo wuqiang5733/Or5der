@@ -1,5 +1,6 @@
 package org.xuxiaoxiao.order.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -14,17 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
+import org.xuxiaoxiao.order.infrastructure.RestaurantReadyEvent;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by WuQiang on 2017/4/25.
@@ -35,6 +35,32 @@ public class MainFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     RestaurantAdapter restaurantAdapter;
     ArrayList<Restaurant> restaurants = new ArrayList<>();
+
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        EventBus.getDefault().unregister(this);
+
+        super.onDetach();
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(RestaurantReadyEvent event) {
+        Log.d("WQWQ","我执行了");
+        restaurants.add(event.getRestaurant());
+        restaurantAdapter.notifyDataSetChanged();
+    }
+
+    public void setModel(ArrayList<Restaurant> model) {
+        this.restaurants = model;
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +84,7 @@ public class MainFragment extends Fragment {
         restaurantRecyclerView.setAdapter(restaurantAdapter);
         return view;
     }
-
+/*
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -91,7 +117,7 @@ public class MainFragment extends Fragment {
         }).start();
 
     }
-
+*/
     private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
         ArrayList<Restaurant> restaurants = new ArrayList<>();
 
