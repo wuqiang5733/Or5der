@@ -1,9 +1,10 @@
 package org.xuxiaoxiao.order.dish;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.infrastructure.HorizontalDividerItemDecoration;
 import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
@@ -27,9 +29,10 @@ import cn.bmob.v3.listener.FindListener;
 
 public class DishesFragment extends Fragment {
     RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
+//    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
     ArrayList<Dish> dishes = new ArrayList<>();
+    GridLayoutManager gridLayoutManager;
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
 
@@ -49,8 +52,12 @@ public class DishesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dishsh, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(linearLayoutManager);
+        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
+        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
+//        linearLayoutManager = new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(linearLayoutManager);
+        gridLayoutManager = new GridLayoutManager(getActivity(),2);
+        recyclerView.setLayoutManager(gridLayoutManager);
         dishesAdapter = new DishesAdapter(dishes);
         recyclerView.setAdapter(dishesAdapter);
         return view;
@@ -74,12 +81,8 @@ public class DishesFragment extends Fragment {
                     @Override
                     public void done(List<Dish> object, BmobException e) {
                         if (e == null) {
-                            // Success
                             for (Dish dish : object) {
-//                                restaurant.getName();
-//                                restaurant.getObjectId();
-//                                restaurant.getCreatedAt();
-                                dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription()));
+                                dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl()));
                                 dishesAdapter.notifyDataSetChanged();
                             }
                         } else {
@@ -107,7 +110,7 @@ public class DishesFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(DishesViewHolder holder, int position) {
-            holder.dishname.setText(dishes.get(position).getName());
+            holder.bind(dishes.get(position));
 
         }
 
@@ -119,10 +122,25 @@ public class DishesFragment extends Fragment {
 
     private class DishesViewHolder extends RecyclerView.ViewHolder {
         TextView dishname;
+        TextView dishprice;
+        TextView dishdiscription;
+        TextView disPhotoUrl;
+        Dish dish;
 
         public DishesViewHolder(View itemView) {
             super(itemView);
             dishname = (TextView) itemView.findViewById(R.id.dish_name_text_view);
+            dishprice = (TextView) itemView.findViewById(R.id.dish_price_text_view);
+            dishdiscription = (TextView) itemView.findViewById(R.id.dish_discription_text_view);
+            disPhotoUrl = (TextView) itemView.findViewById(R.id.dish_photourl_text_view);
+        }
+
+        public void bind(Dish dish) {
+            this.dish = dish;
+            dishname.setText(dish.getName());
+            dishprice.setText(String.valueOf(dish.getPrice()));
+            dishdiscription.setText(dish.getDiscription());
+            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
         }
     }
 }
