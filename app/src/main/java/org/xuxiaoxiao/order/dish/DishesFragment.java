@@ -1,6 +1,5 @@
 package org.xuxiaoxiao.order.dish;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.xuxiaoxiao.order.R;
-import org.xuxiaoxiao.order.infrastructure.HorizontalDividerItemDecoration;
 import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
@@ -52,11 +50,15 @@ public class DishesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dishsh, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
-        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
-        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
+        recyclerView.setHasFixedSize(true);
+//        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
+//        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
 //        linearLayoutManager = new LinearLayoutManager(getActivity());
 //        recyclerView.setLayoutManager(linearLayoutManager);
+
         gridLayoutManager = new GridLayoutManager(getActivity(),2);
+        // 添加自定义分割线：可自定义分割线drawable
+//        recyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL,20, Color.GRAY));
         recyclerView.setLayoutManager(gridLayoutManager);
         dishesAdapter = new DishesAdapter(dishes);
         recyclerView.setAdapter(dishesAdapter);
@@ -140,7 +142,7 @@ public class DishesFragment extends Fragment {
             dishname.setText(dish.getName());
             dishprice.setText(String.valueOf(dish.getPrice()));
             dishdiscription.setText(dish.getDiscription());
-            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
+//            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
         }
     }
 }

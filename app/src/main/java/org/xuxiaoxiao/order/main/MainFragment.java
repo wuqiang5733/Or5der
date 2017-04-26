@@ -1,6 +1,7 @@
 package org.xuxiaoxiao.order.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,11 +46,13 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         restaurantRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_restaurant);
+        restaurantRecyclerView.setHasFixedSize(true);
         Drawable divider = getResources().getDrawable(R.drawable.item_divider);
         // 添加自定义分割线：可自定义分割线drawable
-        restaurantRecyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL, 10, getResources().getColor(R.color.divide_gray_color)));
+        restaurantRecyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.VERTICAL,20, Color.WHITE)); // 设置分割线
 //        restaurantRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
         linearLayoutManager = new LinearLayoutManager(getActivity());
+//        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // 设置线性布局为横向（默认为纵向）
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantAdapter = new RestaurantAdapter(restaurants);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
