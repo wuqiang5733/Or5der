@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.xuxiaoxiao.order.R;
@@ -127,6 +128,7 @@ public class DishesFragment extends Fragment {
         TextView dishprice;
         TextView dishdiscription;
         TextView disPhotoUrl;
+        ImageView disImage;
         Dish dish;
 
         public DishesViewHolder(View itemView) {
@@ -135,6 +137,7 @@ public class DishesFragment extends Fragment {
             dishprice = (TextView) itemView.findViewById(R.id.dish_price_text_view);
             dishdiscription = (TextView) itemView.findViewById(R.id.dish_discription_text_view);
             disPhotoUrl = (TextView) itemView.findViewById(R.id.dish_photourl_text_view);
+            disImage = (ImageView)itemView.findViewById(R.id.dish_image_view);
         }
 
         public void bind(Dish dish) {
@@ -142,6 +145,11 @@ public class DishesFragment extends Fragment {
             dishname.setText(dish.getName());
             dishprice.setText(String.valueOf(dish.getPrice()));
             dishdiscription.setText(dish.getDiscription());
+//            Picasso.with(getActivity())
+//                    .load("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png")
+//                    .placeholder(R.drawable.error)
+//                    .error(R.drawable.error)
+//                    .into(disImage);
 //            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
         }
     }
