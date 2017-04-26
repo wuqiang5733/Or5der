@@ -1,5 +1,7 @@
-package org.xuxiaoxiao.order;
+package org.xuxiaoxiao.order.main;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.dish.DishActivity;
+import org.xuxiaoxiao.order.infrastructure.HorizontalDividerItemDecoration;
+import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +45,8 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         restaurantRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_restaurant);
+        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
+        restaurantRecyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
         linearLayoutManager = new LinearLayoutManager(getActivity());
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantAdapter = new RestaurantAdapter(restaurants);
@@ -49,31 +58,32 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
-        query.setLimit(10);
-        query.findObjects(new FindListener<Restaurant>() {
+        new Thread(new Runnable() {
             @Override
-            public void done(List<Restaurant> object, BmobException e) {
-                if (e == null) {
-                    for (Restaurant gameScore : object) {
-                        gameScore.getName();
-//                        Log.i("bmob", "成功：" + gameScore.getName());
-//                        Log.i("bmob", "成功：" + String.valueOf(gameScore.getRate()));
-
-                        gameScore.getObjectId();
-                        gameScore.getCreatedAt();
-                        restaurants.add(new Restaurant(gameScore.getName(), gameScore.getRate()));
-                        restaurantAdapter.notifyDataSetChanged();
-
-//                        Log.d("WQWQ", String.valueOf(restaurants.size()));
-
+            public void run() {
+                // Fetch data from website
+                BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
+                query.setLimit(10);
+                query.findObjects(new FindListener<Restaurant>() {
+                    @Override
+                    public void done(List<Restaurant> object, BmobException e) {
+                        if (e == null) {
+                            // Success
+                            for (Restaurant restaurant : object) {
+//                                restaurant.getName();
+//                                restaurant.getObjectId();
+//                                restaurant.getCreatedAt();
+                                restaurants.add(new Restaurant(restaurant.getName(), restaurant.getRate()));
+                                restaurantAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+                            // Fail
+                            Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                        }
                     }
-                } else {
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
+                });
             }
-        });
-//        Log.d("WQWQ--", String.valueOf(restaurants.size()));
+        }).start();
 
     }
 
@@ -93,8 +103,9 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(RestaurantViewHolder holder, int position) {
-            holder.restaurantName.setText(restaurants.get(position).getName());
-            holder.restaurantRate.setText(String.valueOf(restaurants.get(position).getRate()));
+//            holder.restaurantName.setText(restaurants.get(position).getName());
+//            holder.restaurantRate.setText(String.valueOf(restaurants.get(position).getRate()));
+            holder.bind(restaurants.get(position));
 
         }
 
@@ -105,6 +116,7 @@ public class MainFragment extends Fragment {
     }
 
     private class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        Restaurant restaurant;
         TextView restaurantName;
         TextView restaurantRate;
 
@@ -118,7 +130,15 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            // 在Fragment 当中启动 一个putExtra的Intent
+            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
+            startActivity(intent);
+        }
 
+        public void bind(Restaurant restaurant) {
+            this.restaurant = restaurant;
+            restaurantName.setText(restaurant.getName());
+            restaurantRate.setText(String.valueOf(restaurant.getRate()));
         }
     }
 }

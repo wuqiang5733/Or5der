@@ -1,4 +1,4 @@
-package org.xuxiaoxiao.order;
+package org.xuxiaoxiao.order.model;
 
 import cn.bmob.v3.BmobObject;
 
@@ -8,7 +8,7 @@ import cn.bmob.v3.BmobObject;
 
 public class Restaurant extends BmobObject {
     private String name;
-    private int rate;
+    private Integer rate;
 
     public Restaurant(String name,int rate){
         this.name = name;
@@ -23,11 +23,11 @@ public class Restaurant extends BmobObject {
         this.name = name;
     }
 
-    public int getRate() {
+    public Integer getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(Integer rate) {
         this.rate = rate;
     }
 

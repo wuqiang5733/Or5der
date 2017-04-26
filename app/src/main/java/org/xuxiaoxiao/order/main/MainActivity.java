@@ -1,10 +1,11 @@
-package org.xuxiaoxiao.order;
+package org.xuxiaoxiao.order.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.UniversalFragmentActivity;
 
 public class MainActivity extends UniversalFragmentActivity {
 
@@ -15,7 +16,8 @@ public class MainActivity extends UniversalFragmentActivity {
     // 下面是跟权限有关的
     @Override
     protected String[] getDesiredPermissions() {
-        return (new String[]{WRITE_EXTERNAL_STORAGE});
+        return (new String[]{});
+//        return (new String[]{WRITE_EXTERNAL_STORAGE});
     }
 
     @Override
