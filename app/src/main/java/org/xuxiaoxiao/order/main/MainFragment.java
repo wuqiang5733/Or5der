@@ -11,6 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -70,6 +73,10 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 当 Activity 从操作系统接收到它的 onCreateOptionsMenu 回调函数时
+        // FragmentManager 负责调用 Fragment.onCreateOptionsMenu
+        // 所以要显式的告诉 FragmentManager ，Fragment 也应该接收到一个回调函数
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -173,4 +180,37 @@ public class MainFragment extends Fragment {
             restaurantRate.setText(String.valueOf(restaurant.getRate()));
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime_list, menu);
+        // 根据指示器来决定要不要显示 Subtitle
+//        MenuItem subtitleItem = menu.findItem(R.id.show_subtitle);
+//        if (mSubtitleVisible) {
+//            subtitleItem.setTitle(R.string.hide_subtitle);
+//        } else {
+//            subtitleItem.setTitle(R.string.show_subtitle);
+//        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.new_crime:
+                Intent intent = new Intent(getContext(),AddNewRestaurantActivity.class);
+                startActivity(intent);
+                return true;
+//            case R.id.show_subtitle:
+//                // 显示 Subtitle
+//                mSubtitleVisible = !mSubtitleVisible;
+//                getActivity().invalidateOptionsMenu();
+//                updateSubtitle();
+//                // 返回 true 来指示不需要更进一步的处理了
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

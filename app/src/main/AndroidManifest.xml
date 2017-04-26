@@ -30,6 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".dish.DishActivity"></activity>
+        <activity android:name=".main.AddNewRestaurantActivity"></activity>
     </application>
 
 </manifest>

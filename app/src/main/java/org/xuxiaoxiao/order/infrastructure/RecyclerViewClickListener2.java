@@ -64,3 +64,4 @@ public class RecyclerViewClickListener2 implements RecyclerView.OnItemTouchListe
     public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
     }
 }
+// http://blog.sina.com.cn/s/blog_13d81ef090102wdnv.html
