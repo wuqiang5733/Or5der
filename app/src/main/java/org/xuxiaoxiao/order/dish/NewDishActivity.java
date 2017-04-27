@@ -10,10 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.model.Dish;
 
 import java.io.File;
 
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by WuQiang on 2017/4/27.
@@ -67,19 +70,19 @@ public class NewDishActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-//                        Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);
-//                        newDish.save(new SaveListener<String>() {
-//
-//                            @Override
-//                            public void done(String objectId, BmobException e) {
-//                                if (e == null) {
-//                                    Log.i("WQWQ", "创建数据成功：" + objectId);
-//
-//                                } else {
-//                                    Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
-//                                }
-//                            }
-//                        });
+                        Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", null, restaurantName);
+                        newDish.save(new SaveListener<String>() {
+
+                            @Override
+                            public void done(String objectId, BmobException e) {
+                                if (e == null) {
+                                    Log.i("WQWQ", "创建数据成功：" + objectId);
+
+                                } else {
+                                    Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                                }
+                            }
+                        });
 
                     }
                 }).start();
