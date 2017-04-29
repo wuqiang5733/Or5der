@@ -12,12 +12,9 @@ import android.widget.EditText;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.model.Dish;
 
-import java.io.File;
-
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by WuQiang on 2017/4/27.
@@ -63,9 +60,13 @@ public class NewDishActivity extends AppCompatActivity {
 
         String picPath = "/storage/extSdCard/DCIM/Camera/20170430_003125.jpg";
 //        String picPath = "sdcard/temp.jpg";
-        final BmobFile bmobFile = new BmobFile(new File(picPath));
+        final BmobFile bmobFile = new BmobFile("test.png",null,"http://bmob-cdn-10939.b0.upaiyun.com/2017/04/30/6d8efe6bb7484b568333bf955d8a2f33.jpg");
+//        final BmobFile bmobFile = new BmobFile(new File(picPath));
 
-
+// http://blog.csdn.net/u014454120/article/details/51302508
+        /**
+         * 应该是在上传图片成功的回调函数当中，往数据库当中添加一行数据
+         */
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,24 +75,24 @@ public class NewDishActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        bmobFile.uploadblock(new UploadFileListener() {
-
-                            @Override
-                            public void done(BmobException e) {
-                                if(e==null){
-                                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
-                                    Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
-                                }else{
-                                    Log.d("WQWQ","上传文件失败：" + e.getMessage());
-                                }
-
-                            }
-
-                            @Override
-                            public void onProgress(Integer value) {
-                                // 返回的上传进度（百分比）
-                            }
-                        });
+//                        bmobFile.uploadblock(new UploadFileListener() {
+//
+//                            @Override
+//                            public void done(BmobException e) {
+//                                if(e==null){
+//                                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+//                                    Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
+//                                }else{
+//                                    Log.d("WQWQ","上传文件失败：" + e.getMessage());
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onProgress(Integer value) {
+//                                // 返回的上传进度（百分比）
+//                            }
+//                        });
 
                         Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);
                         newDish.save(new SaveListener<String>() {
