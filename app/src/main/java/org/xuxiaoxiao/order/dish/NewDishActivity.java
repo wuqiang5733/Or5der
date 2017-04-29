@@ -17,6 +17,7 @@ import java.io.File;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by WuQiang on 2017/4/27.
@@ -60,8 +61,11 @@ public class NewDishActivity extends AppCompatActivity {
         Button saveButton = (Button) findViewById(R.id.save_dish);
         saveButton.setText(restaurantName);
 
-        String picPath = "sdcard/temp.jpg";
+        String picPath = "/storage/extSdCard/DCIM/Camera/20170430_003125.jpg";
+//        String picPath = "sdcard/temp.jpg";
         final BmobFile bmobFile = new BmobFile(new File(picPath));
+
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +74,26 @@ public class NewDishActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", null, restaurantName);
+                        bmobFile.uploadblock(new UploadFileListener() {
+
+                            @Override
+                            public void done(BmobException e) {
+                                if(e==null){
+                                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+                                    Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
+                                }else{
+                                    Log.d("WQWQ","上传文件失败：" + e.getMessage());
+                                }
+
+                            }
+
+                            @Override
+                            public void onProgress(Integer value) {
+                                // 返回的上传进度（百分比）
+                            }
+                        });
+
+                        Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);
                         newDish.save(new SaveListener<String>() {
 
                             @Override
