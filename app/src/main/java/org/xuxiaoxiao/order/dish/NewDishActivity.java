@@ -15,11 +15,13 @@ import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.addimage.MediaFolderActivity;
+import org.xuxiaoxiao.order.model.Dish;
 
 import java.io.File;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
@@ -94,6 +96,20 @@ public static Intent newImagePathIntent(Context packageContent,String imagePath)
                                 if(e==null){
                                     //bmobFile.getFileUrl()--返回的上传文件的完整地址
                                     Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
+
+                                    Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作",new BmobFile("512151","",bmobFile.getFileUrl()), restaurantName);
+                                    newDish.save(new SaveListener<String>() {
+
+                                        @Override
+                                        public void done(String objectId, BmobException e) {
+                                            if (e == null) {
+                                                Log.i("WQWQ", "创建数据成功：" + objectId);
+
+                                            } else {
+                                                Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                                            }
+                                        }
+                                    });
                                 }else{
                                     Log.d("WQWQ","上传文件失败：" + e.getMessage());
                                 }
