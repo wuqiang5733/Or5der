@@ -31,9 +31,7 @@
         </activity>
         <activity android:name=".dish.DishActivity"></activity>
         <activity android:name=".main.NewRestaurantActivity"></activity>
-        <activity android:name=".dish.NewDishActivity"
-            android:launchMode="singleTask"
-            ></activity>
+        <activity android:name=".dish.NewDishActivity"></activity>
         <activity android:name=".addimage.MediaFolderActivity"></activity>
         <activity android:name=".addimage.MediaItemActiviey"></activity>
     </application>

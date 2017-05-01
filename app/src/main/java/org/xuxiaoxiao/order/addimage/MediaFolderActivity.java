@@ -1,5 +1,6 @@
 package org.xuxiaoxiao.order.addimage;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
@@ -30,5 +31,14 @@ public class MediaFolderActivity extends UniversalFragmentActivity {
     @Override
     protected void onReady(Bundle state) {
 
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2 && resultCode == 3 && data != null){
+            data.getStringExtra("back");
+            setResult(4, data);
+            finish();
+        }
     }
 }

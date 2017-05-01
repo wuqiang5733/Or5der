@@ -1,6 +1,6 @@
 package org.xuxiaoxiao.order.addimage;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -43,7 +43,6 @@ public class MediaFolderFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
     }
 
@@ -171,11 +170,11 @@ public class MediaFolderFragment extends Fragment {
     public static class MediaFolderAdapter extends RecyclerView.Adapter<MediaFolderAdapter.MediaViewHolder> {
         ArrayList<MediaFolderModel> mediaFolderModels = new ArrayList<>();
 
-        Context context;
+        Activity activity;
 
-        public MediaFolderAdapter(Context context, ArrayList<MediaFolderModel> mediaFolderModels) {
+        public MediaFolderAdapter( Activity activity, ArrayList<MediaFolderModel> mediaFolderModels) {
             this.mediaFolderModels = mediaFolderModels;
-            this.context = context;
+            this.activity = activity;
         }
 
         @Override
@@ -191,7 +190,7 @@ public class MediaFolderFragment extends Fragment {
             holder.folderName.setText(mediaFolderName);
             holder.itemSum.setText(String.valueOf(mediaFolderModels.get(position).getMediaItemSum()));
 
-            Glide.with(context).load("file://" + mediaFolderModels.get(position).getFirstItemImage())
+            Glide.with(activity).load("file://" + mediaFolderModels.get(position).getFirstItemImage())
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
@@ -220,8 +219,8 @@ public class MediaFolderFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent intent = MediaItemActiviey.newIntent(context,mediaFolderName);
-                context.startActivity(intent);
+                Intent intent = MediaItemActiviey.newIntent(activity,mediaFolderName);
+                activity.startActivityForResult(intent, 2);
             }
 
 

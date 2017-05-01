@@ -21,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.xuxiaoxiao.order.R;
-import org.xuxiaoxiao.order.dish.NewDishActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,8 +91,13 @@ public class MediaItemFragment extends Fragment {
 //                Intent intent = NewDishActivity.newImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
 //                getActivity().startActivity(intent);
 //                getActivity().finish();
-                Intent intent = NewDishActivity.newBundleImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
-                getActivity().startActivity(intent);
+//                Intent intent = NewDishActivity.newBundleImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
+//                getActivity().startActivity(intent);
+//                getActivity().finish();
+
+                Intent i = new Intent();
+                i.putExtra("back",mediaItems.get(lastSelectItem));
+                getActivity().setResult(3, i);
                 getActivity().finish();
             }
         });
@@ -274,3 +278,4 @@ public class MediaItemFragment extends Fragment {
         }
     }
 }
+// http://blog.csdn.net/liuyifirsttime/article/details/38875287

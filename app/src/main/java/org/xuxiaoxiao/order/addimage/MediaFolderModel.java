@@ -39,3 +39,4 @@ public class MediaFolderModel {
         this.firstItemImage = firstItemImage;
     }
 }
+

@@ -66,7 +66,7 @@ public class NewDishActivity extends AppCompatActivity {
 
 public static Intent newBundleImagePathIntent(Context packageContext,String imagePath){
     Intent intent = new Intent(packageContext,NewDishActivity.class);
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
     Bundle args = new Bundle();
     args.putString(BUNDLE_IMAGE_PATH,imagePath);
     intent.putExtras(args);
@@ -172,8 +172,9 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
         selectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // 去选取图片
                 Intent intent = new Intent(getApplicationContext(), MediaFolderActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
     }
@@ -183,6 +184,26 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
         Intent intent = new Intent(packageContext, NewDishActivity.class);
         intent.putExtra(RESTAURANT_NAME, restaurantName);
         return intent;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1 && resultCode==4){
+            if(data != null) {
+                imagePath = data.getStringExtra("back");
+                if (imagePath != null){  // 如果能找到 imagePath 说明是从选择图片的Fragment 来的，把图片送去显示
+                    Log.d("WQWQ",imagePath);
+                    Toast.makeText(this,imagePath,Toast.LENGTH_SHORT).show();
+                    Glide
+                            .with(this)
+                            .load(imagePath)
+                            .centerCrop()
+//                    .placeholder(R.drawable.error)
+                            .crossFade()
+                            .into(dishImageView);
+                }
+            }
+        }
     }
 /**
  *               Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);

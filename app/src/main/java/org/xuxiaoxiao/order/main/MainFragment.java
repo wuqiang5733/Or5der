@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
@@ -46,34 +45,6 @@ public class MainFragment extends Fragment {
 
     private List<Restaurant> restaurants =
             Collections.synchronizedList(new ArrayList<Restaurant>());
-//    ArrayList<Restaurant> restaurants = new ArrayList<>();
-
-/*
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onDetach() {
-        EventBus.getDefault().unregister(this);
-
-        super.onDetach();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(RestaurantReadyEvent event) {
-        Log.d("WQWQ", "我执行了");
-        restaurants.add(event.getRestaurant());
-        restaurantAdapter.notifyDataSetChanged();
-    }
-
-    public void setModel(ArrayList<Restaurant> model) {
-        this.restaurants = model;
-    }
-*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -123,14 +94,14 @@ public class MainFragment extends Fragment {
                 new RecyclerViewClickListener2.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
                         Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
                         startActivity(intent);
                     }
 
                     @Override
                     public void onItemLongClick(View view, int position) {
-                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
                     }
                 }));
         return view;
