@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.addimage.MediaFolderActivity;
-import org.xuxiaoxiao.order.model.Dish;
+
+import java.io.File;
 
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by WuQiang on 2017/4/27.
@@ -56,7 +57,8 @@ public static Intent newImagePathIntent(Context packageContent,String imagePath)
         Button addDishButton = (Button) findViewById(R.id.add_dish);
         Button selectImage = (Button) findViewById(R.id.select_image);
         dishImageView = (ImageView) findViewById(R.id.dish_image_view);
-        if (imagePath != null){
+        if (imagePath != null){  // 如果能找到 imagePath 说明是从选择图片的Fragment 来的，把图片送去显示
+            Log.d("WQWQ",imagePath);
             Toast.makeText(this,imagePath,Toast.LENGTH_SHORT).show();
             Glide
                     .with(this)
@@ -66,11 +68,10 @@ public static Intent newImagePathIntent(Context packageContent,String imagePath)
                     .crossFade()
                     .into(dishImageView);
         }
-        addDishButton.setText(restaurantName);
+//        addDishButton.setText(restaurantName);
 
         String picPath = "/storage/extSdCard/DCIM/Camera/20170430_003125.jpg";
 //        String picPath = "sdcard/temp.jpg";
-        final BmobFile bmobFile = new BmobFile("test.png",null,"http://bmob-cdn-10939.b0.upaiyun.com/2017/04/30/6d8efe6bb7484b568333bf955d8a2f33.jpg");
 //        final BmobFile bmobFile = new BmobFile(new File(picPath));
 
 // http://blog.csdn.net/u014454120/article/details/51302508
@@ -84,39 +85,28 @@ public static Intent newImagePathIntent(Context packageContent,String imagePath)
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        final BmobFile bmobFile = new BmobFile(new File(imagePath));
 
-//                        bmobFile.uploadblock(new UploadFileListener() {
-//
-//                            @Override
-//                            public void done(BmobException e) {
-//                                if(e==null){
-//                                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
-//                                    Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
-//                                }else{
-//                                    Log.d("WQWQ","上传文件失败：" + e.getMessage());
-//                                }
-//
-//                            }
-//
-//                            @Override
-//                            public void onProgress(Integer value) {
-//                                // 返回的上传进度（百分比）
-//                            }
-//                        });
-
-                        Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);
-                        newDish.save(new SaveListener<String>() {
+                        bmobFile.uploadblock(new UploadFileListener() {
 
                             @Override
-                            public void done(String objectId, BmobException e) {
-                                if (e == null) {
-                                    Log.i("WQWQ", "创建数据成功：" + objectId);
-
-                                } else {
-                                    Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                            public void done(BmobException e) {
+                                if(e==null){
+                                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+                                    Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
+                                }else{
+                                    Log.d("WQWQ","上传文件失败：" + e.getMessage());
                                 }
+
+                            }
+
+                            @Override
+                            public void onProgress(Integer value) {
+                                // 返回的上传进度（百分比）
                             }
                         });
+
+
 
                     }
                 }).start();
@@ -137,5 +127,22 @@ public static Intent newImagePathIntent(Context packageContent,String imagePath)
         intent.putExtra(RESTAURANT_NAME, restaurantName);
         return intent;
     }
+/**
+ *               Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);
+ newDish.save(new SaveListener<String>() {
 
+@Override
+public void done(String objectId, BmobException e) {
+if (e == null) {
+Log.i("WQWQ", "创建数据成功：" + objectId);
+
+} else {
+Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
 }
+}
+});
+ *
+ */
+}
+
+
