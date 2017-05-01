@@ -31,29 +31,70 @@ import cn.bmob.v3.listener.UploadFileListener;
 public class NewDishActivity extends AppCompatActivity {
     private static final String RESTAURANT_NAME = "org.xuxiaoxiao.order.newdishactivity.restaurantname";
     private static final String IMAGE_PATH = "org.xuxiaoxiao.newdishactivity.image_path";
+    private static final String BUNDLE_IMAGE_PATH = "org.xuxiaoxiao.newdishactivity.bundle_image_path";
     private String restaurantName ,imagePath;
     private ImageView dishImageView;
 
+    static final String STATE_DISH_NAME = "StateDishName";
+    static final String STATE_DISH_PRICE = "StateDishPrice";
+    static final String STATE_DISH_DISCR = "StateDishDiscr";
 
-// 为了选择图片之后，把图片的 路径 传过来
-public static Intent newImagePathIntent(Context packageContent,String imagePath){
-    Intent intent = new Intent(packageContent,NewDishActivity.class);
-    intent.putExtra(IMAGE_PATH,imagePath);
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putString(STATE_DISH_NAME, restaurantName);
+//        savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Always call the superclass so it can restore the view hierarchy
+        super.onRestoreInstanceState(savedInstanceState);
+
+
+        // Restore state members from saved instance
+        restaurantName = savedInstanceState.getString(STATE_DISH_NAME);
+//        mCurrentLevel = savedInstanceState.getInt(STATE_LEVEL);
+    }
+
+//// 为了选择图片之后，把图片的 路径 传过来
+//public static Intent newImagePathIntent(Context packageContent,String imagePath){
+//    Intent intent = new Intent(packageContent,NewDishActivity.class);
+//    intent.putExtra(IMAGE_PATH,imagePath);
+//    return intent;
+//}
+
+public static Intent newBundleImagePathIntent(Context packageContext,String imagePath){
+    Intent intent = new Intent(packageContext,NewDishActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    Bundle args = new Bundle();
+    args.putString(BUNDLE_IMAGE_PATH,imagePath);
+    intent.putExtras(args);
     return intent;
 }
+
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        setIntent(intent);
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        Log.i("WQWQ", "onCreate");
         restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
-        imagePath = getIntent().getStringExtra(IMAGE_PATH);
-
+//        imagePath = getIntent().getStringExtra(IMAGE_PATH);
+        // 以 Bundle 的方法提取 图片路径
+        Bundle bundle = this.getIntent().getExtras();
+        imagePath = bundle.getString(BUNDLE_IMAGE_PATH);
         setContentView(R.layout.activity_new_dish);
 //        Log.i("WQWQ", "onCreate");
 //        restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
 
 
         EditText dishName = (EditText) findViewById(R.id.dish_name_edit_text);
+        dishName.setText(restaurantName);
         EditText distPrice = (EditText) findViewById(R.id.dish_price_edit_text);
         EditText distDiscription = (EditText) findViewById(R.id.dish_discription_edit_text);
         Button addDishButton = (Button) findViewById(R.id.add_dish);

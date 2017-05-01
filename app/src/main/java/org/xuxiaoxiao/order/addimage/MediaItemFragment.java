@@ -89,7 +89,10 @@ public class MediaItemFragment extends Fragment {
         sendItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = NewDishActivity.newImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
+//                Intent intent = NewDishActivity.newImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
+//                getActivity().startActivity(intent);
+//                getActivity().finish();
+                Intent intent = NewDishActivity.newBundleImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
                 getActivity().startActivity(intent);
                 getActivity().finish();
             }

@@ -20,6 +20,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MediaItemActiviey extends UniversalFragmentActivity {
 
+//    public static void finishMediaItemActivity(){
+//        finish();
+//    }
     private static final String MEDIA_FOLDER_NAME =
             "org.xuxiaoxiao.android.mediaFolderName";
 
