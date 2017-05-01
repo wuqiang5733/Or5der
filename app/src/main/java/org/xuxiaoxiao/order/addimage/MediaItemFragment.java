@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.dish.NewDishActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +32,7 @@ import java.util.List;
  */
 
 public class MediaItemFragment extends Fragment {
+    private static final String IMAGE_PATH = "org.xuxiaoxiao.mediaitemfragment.image.name";
     RecyclerView recyclerView;
     GridLayoutManager gridLayoutManager;
     MediaItemAdapter mediaItemAdapter;
@@ -83,9 +84,13 @@ public class MediaItemFragment extends Fragment {
 
         sendItemButton = (Button) view.findViewById(R.id.send_item_button);
         sendItemButton.setText(mediaFolderName);
+        // 没有选择图片就不让点击
+        sendItemButton.setEnabled(false);
         sendItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = NewDishActivity.newImagePathIntent(getActivity(),mediaItems.get(lastSelectItem));
+                getActivity().startActivity(intent);
                 getActivity().finish();
             }
         });
@@ -206,7 +211,7 @@ public class MediaItemFragment extends Fragment {
                     if (cb.isChecked()) {       // 如果以前已经选中过
                         cb.setChecked(true);            // 去掉钩
 //                        Log.d("WQWQ", "if");
-                        Log.d("WQWQ_if_id", String.valueOf(id));
+//                        Log.d("WQWQ_if_id", String.valueOf(id));
 
                         CheckBox tempButton = (CheckBox) getActivity().findViewById(lastSelectItem);
                         if (tempButton != null) {
@@ -220,10 +225,11 @@ public class MediaItemFragment extends Fragment {
                         if (lastSelectItem == id) {
                             lastSelectItem = -1;
                         }
-                        Log.d("WQWQ_else_id", String.valueOf(id));
+//                        Log.d("WQWQ_else_id", String.valueOf(id));
                     }
-
-                    Log.d("WQWQ_lastSelectItem", String.valueOf(lastSelectItem));
+//                    boolean booleanTemp = lastSelectItem == -1 ? false : true;
+                    sendItemButton.setEnabled(lastSelectItem == -1 ? false : true);
+//                    Log.d("WQWQ_lastSelectItem", String.valueOf(lastSelectItem));
 
                 }
             });
