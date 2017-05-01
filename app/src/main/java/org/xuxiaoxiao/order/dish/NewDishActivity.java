@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.addimage.MediaFolderActivity;
 import org.xuxiaoxiao.order.model.Dish;
 
 import cn.bmob.v3.datatype.BmobFile;
@@ -25,38 +26,21 @@ public class NewDishActivity extends AppCompatActivity {
             "org.xuxiaoxiao.order.newdishactivity.restaurantname";
     private String restaurantName;
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        EventBus.getDefault().register(this);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        EventBus.getDefault().unregister(this);
-//
-//        super.onStop();
-//    }
-//
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onEventMainThread(SendRstaurantNameEvent event) {
-//
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("WQWQ", "onCreate");
+//        Log.i("WQWQ", "onCreate");
         restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
         setContentView(R.layout.activity_new_dish);
-        Log.i("WQWQ", "onCreate");
+//        Log.i("WQWQ", "onCreate");
         restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
         EditText dishName = (EditText) findViewById(R.id.dish_name_edit_text);
         EditText distPrice = (EditText) findViewById(R.id.dish_price_edit_text);
         EditText distDiscription = (EditText) findViewById(R.id.dish_discription_edit_text);
-        Button saveButton = (Button) findViewById(R.id.save_dish);
-        saveButton.setText(restaurantName);
+        Button addDishButton = (Button) findViewById(R.id.add_dish);
+        Button selectImage = (Button) findViewById(R.id.select_image);
+        addDishButton.setText(restaurantName);
 
         String picPath = "/storage/extSdCard/DCIM/Camera/20170430_003125.jpg";
 //        String picPath = "sdcard/temp.jpg";
@@ -68,7 +52,7 @@ public class NewDishActivity extends AppCompatActivity {
          * 应该是在上传图片成功的回调函数当中，往数据库当中添加一行数据
          */
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        addDishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new Thread(new Runnable() {
@@ -110,6 +94,13 @@ public class NewDishActivity extends AppCompatActivity {
 
                     }
                 }).start();
+            }
+        });
+        selectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MediaFolderActivity.class);
+                startActivity(intent);
             }
         });
     }
