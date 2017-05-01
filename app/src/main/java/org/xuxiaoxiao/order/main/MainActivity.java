@@ -7,6 +7,11 @@ import android.widget.Toast;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.UniversalFragmentActivity;
 
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class MainActivity extends UniversalFragmentActivity {
 
     private static final String MODEL_TAG = "model";
@@ -53,8 +58,8 @@ public class MainActivity extends UniversalFragmentActivity {
     // 下面是跟权限有关的
     @Override
     protected String[] getDesiredPermissions() {
-        return (new String[]{});
-//        return (new String[]{WRITE_EXTERNAL_STORAGE});
+//        return (new String[]{});
+        return (new String[]{WRITE_EXTERNAL_STORAGE,INTERNET,ACCESS_NETWORK_STATE,READ_EXTERNAL_STORAGE});
     }
 
     @Override
