@@ -24,13 +24,13 @@ public class MainActivity extends UniversalFragmentActivity {
            protected FragmentManager supportFragmentManager;
            protected FragmentTransaction fragmentTransaction;
          */
-        mFrag = (RestaurantModelFragment) supportFragmentManager.findFragmentByTag(MODEL_TAG);
-
-        if (mFrag == null) {
-            mFrag = new RestaurantModelFragment();
-            fragmentTransaction.add(mFrag,MODEL_TAG);
-//            fragmentTransaction.add(mFrag, MODEL_TAG);
-        }
+//        mFrag = (RestaurantModelFragment) supportFragmentManager.findFragmentByTag(MODEL_TAG);
+//
+//        if (mFrag == null) {
+//            mFrag = new RestaurantModelFragment();
+//            fragmentTransaction.add(mFrag,MODEL_TAG);
+////            fragmentTransaction.add(mFrag, MODEL_TAG);
+//        }
 
 //        MainFragment demo =
 //                (MainFragment) mgr.findFragmentById(android.R.id.content);

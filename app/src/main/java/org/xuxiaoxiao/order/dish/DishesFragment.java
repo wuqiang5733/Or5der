@@ -1,12 +1,13 @@
 package org.xuxiaoxiao.order.dish;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,14 +19,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
-import org.xuxiaoxiao.order.infrastructure.DishReadyEvent;
 import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by WuQiang on 2017/4/26.
@@ -35,9 +38,13 @@ public class DishesFragment extends Fragment {
     RecyclerView recyclerView;
     //    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
-    ArrayList<Dish> dishes = new ArrayList<>();
+//    ArrayList<Dish> dishes = new ArrayList<>();
     String restaurantName;
     GridLayoutManager gridLayoutManager;
+
+    private List<Dish> dishes =
+            Collections.synchronizedList(new ArrayList<Dish>());
+
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
 
@@ -46,28 +53,31 @@ public class DishesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         restaurantName = getArguments().getString(RESTAURANT_NAME);
+        dishesAdapter = new DishesAdapter();
+
+        new RestaurantAsyncTask().execute();
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onDetach() {
-        EventBus.getDefault().unregister(this);
-
-        super.onDetach();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(DishReadyEvent event) {
-//        Log.d("WQWQ","我执行了");
-        dishes.add(event.getDish());
-        dishesAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    public void onAttach(Activity activity) {
+//        super.onAttach(activity);
+//
+//        EventBus.getDefault().register(this);
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        EventBus.getDefault().unregister(this);
+//
+//        super.onDetach();
+//    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEventMainThread(DishReadyEvent event) {
+////        Log.d("WQWQ","我执行了");
+//        dishes.add(event.getDish());
+//        dishesAdapter.notifyDataSetChanged();
+//    }
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onEventMainThread(SendRstaurantNameEvent event) {
@@ -100,21 +110,21 @@ public class DishesFragment extends Fragment {
 //        recyclerView.setLayoutManager(linearLayoutManager);
 
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        recyclerView.setHasFixedSize(true);
+//        recyclerView.setHasFixedSize(true);
 
         // 添加自定义分割线：可自定义分割线drawable
 //        recyclerView.addItemDecoration(new RecycleViewDivider(getActivity(), LinearLayoutManager.HORIZONTAL,20, Color.GRAY));
         recyclerView.setLayoutManager(gridLayoutManager);
-        dishesAdapter = new DishesAdapter(dishes);
+//        dishesAdapter = new DishesAdapter();
         recyclerView.setAdapter(dishesAdapter);
         return view;
     }
 
     private class DishesAdapter extends RecyclerView.Adapter<DishesViewHolder> {
-        ArrayList<Dish> dishes = new ArrayList<>();
+//        ArrayList<Dish> dishes = new ArrayList<>();
 
-        public DishesAdapter(ArrayList<Dish> dishes) {
-            this.dishes = dishes;
+        public DishesAdapter() {
+//            this.dishes = dishes;
         }
 
         @Override
@@ -195,5 +205,47 @@ public class DishesFragment extends Fragment {
                 return super.onOptionsItemSelected(item);
         }
     }
+    public class RestaurantAsyncTask extends AsyncTask<Void, Void, Void> {
 
+        @Override
+        protected Void doInBackground(Void... params) {
+            fetchDishData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private void fetchDishData() {
+        // Fetch data from website
+        BmobQuery<Dish> query = new BmobQuery<Dish>();
+        query.setLimit(10);
+        // 获得来自 Activity 的数据
+        final String restaurantName = getArguments().getString(RESTAURANT_NAME);
+//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurantName));
+        query.addWhereEqualTo("restaurantName", restaurantName);
+//            Log.d("WQWQ",restaurantName);
+
+        query.findObjects(new FindListener<Dish>() {
+            @Override
+            public void done(List<Dish> object, BmobException e) {
+                if (e == null) {
+                    // Success
+                    for (Dish dish : object) {
+//                                Log.d("WQWQ",restaurant.getName());
+                        dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(),dish.getRestaurantName()));
+//                            EventBus.getDefault().post(new DishReadyEvent(dish));
+                        dishesAdapter.notifyDataSetChanged();
+
+                    }
+                } else {
+                    // Fail
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+            }
+        });
+    }
 }

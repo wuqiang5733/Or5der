@@ -34,13 +34,13 @@ public class DishActivity extends UniversalFragmentActivity {
            protected FragmentManager supportFragmentManager;
            protected FragmentTransaction fragmentTransaction;
          */
-        mFrag = (DishModelFragment) supportFragmentManager.findFragmentByTag(MODEL_TAG);
-
-        if (mFrag == null) {
-            mFrag = DishModelFragment.newInstance(restaurantName);;
-            fragmentTransaction.add(mFrag,MODEL_TAG);
-//            fragmentTransaction.add(mFrag, MODEL_TAG);
-        }
+//        mFrag = (DishModelFragment) supportFragmentManager.findFragmentByTag(MODEL_TAG);
+//
+//        if (mFrag == null) {
+//            mFrag = DishModelFragment.newInstance(restaurantName);;
+//            fragmentTransaction.add(mFrag,MODEL_TAG);
+////            fragmentTransaction.add(mFrag, MODEL_TAG);
+//        }
 
 //        MainFragment demo =
 //                (MainFragment) mgr.findFragmentById(android.R.id.content);

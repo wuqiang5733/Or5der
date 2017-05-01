@@ -1,9 +1,9 @@
 package org.xuxiaoxiao.order.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,17 +19,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
 import org.xuxiaoxiao.order.infrastructure.RecyclerViewClickListener2;
-import org.xuxiaoxiao.order.infrastructure.RestaurantReadyEvent;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 import static org.xuxiaoxiao.order.R.layout.restaurant;
 
@@ -41,9 +43,12 @@ public class MainFragment extends Fragment {
     RecyclerView restaurantRecyclerView;
     LinearLayoutManager linearLayoutManager;
     RestaurantAdapter restaurantAdapter;
-    ArrayList<Restaurant> restaurants = new ArrayList<>();
 
+    private List<Restaurant> restaurants =
+            Collections.synchronizedList(new ArrayList<Restaurant>());
+//    ArrayList<Restaurant> restaurants = new ArrayList<>();
 
+/*
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -68,7 +73,7 @@ public class MainFragment extends Fragment {
     public void setModel(ArrayList<Restaurant> model) {
         this.restaurants = model;
     }
-
+*/
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +82,11 @@ public class MainFragment extends Fragment {
         // FragmentManager 负责调用 Fragment.onCreateOptionsMenu
         // 所以要显式的告诉 FragmentManager ，Fragment 也应该接收到一个回调函数
         setHasOptionsMenu(true);
+//        new LoadWordsThread().start();
+        restaurantAdapter = new RestaurantAdapter();
+
+        new RestaurantAsyncTask().execute();
+
     }
 
     @Nullable
@@ -92,8 +102,10 @@ public class MainFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getActivity());
 //        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // 设置线性布局为横向（默认为纵向）
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
-        restaurantAdapter = new RestaurantAdapter(restaurants);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
+
+//        restaurantAdapter = new RestaurantAdapter(restaurants);
+//        restaurantRecyclerView.setAdapter(restaurantAdapter);
 //        restaurantRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(restaurantRecyclerView) {
 //            @Override
 //            public void onItemClick(RecyclerView.ViewHolder viewHolder) {
@@ -125,11 +137,12 @@ public class MainFragment extends Fragment {
     }
 
     private class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
-        ArrayList<Restaurant> restaurants = new ArrayList<>();
+//        ArrayList<Restaurant> restaurants = new ArrayList<>();
 
-        public RestaurantAdapter(ArrayList<Restaurant> restaurants) {
-            this.restaurants = restaurants;
+        public RestaurantAdapter() {
+//            this.restaurants = restaurants;
 //            Log.d("WQWQ", String.valueOf(restaurants.size()));
+//            notifyDataSetChanged();
         }
 
         @Override
@@ -191,7 +204,7 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.new_restaurant:
-                Intent intent = new Intent(getContext(),NewRestaurantActivity.class);
+                Intent intent = new Intent(getContext(), NewRestaurantActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -199,4 +212,41 @@ public class MainFragment extends Fragment {
         }
     }
 
+    public class RestaurantAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            fetchRestaurantData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    private void fetchRestaurantData() {
+//        final ArrayList<Restaurant> restaurants = new ArrayList<>();
+        // Fetch data from website
+        BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
+        query.setLimit(10);
+        query.findObjects(new FindListener<Restaurant>() {
+            @Override
+            public void done(List<Restaurant> object, BmobException e) {
+                if (e == null) {
+                    // Success
+                    for (Restaurant restaurant : object) {
+                        Log.d("WQWQ", restaurant.getName());
+                        restaurants.add(new Restaurant(restaurant.getName(), restaurant.getRate()));
+//                                EventBus.getDefault().post(new RestaurantReadyEvent(restaurant));
+                        restaurantAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    // Fail
+                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                }
+            }
+        });
+    }
 }
