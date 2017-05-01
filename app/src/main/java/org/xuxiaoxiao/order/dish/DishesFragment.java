@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.model.Dish;
@@ -173,17 +173,17 @@ public class DishesFragment extends Fragment {
             dishdiscription.setText(dish.getDiscription());
 //            imageView.setPlaceholderImage(R.drawable.error);
 //            imageView.setImageUrl("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png");
-            Picasso.with(getActivity()).load(dish.getPhotoUrl().getFileUrl())
-                    .fit().centerCrop()
-//                    .placeholder(R.drawable.error)
-                    .error(R.drawable.error).into(disImage);
-//            Glide
-//                    .with(getActivity())
-//                    .load("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png")
-//                    .centerCrop()
+//            Picasso.with(getActivity()).load(dish.getPhotoUrl().getFileUrl())
+//                    .fit().centerCrop()
 ////                    .placeholder(R.drawable.error)
-//                    .crossFade()
-//                    .into(disImage);
+//                    .error(R.drawable.error).into(disImage);
+            Glide
+                    .with(getActivity())
+                    .load(dish.getPhotoUrl().getFileUrl())
+                    .centerCrop()
+//                    .placeholder(R.drawable.error)
+                    .crossFade()
+                    .into(disImage);
 //            disPhotoUrl.setText(dish.getPhotoUrl().getFileUrl());
         }
     }

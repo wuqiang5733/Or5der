@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.infrastructure.HorizontalDividerItemDecoration;
@@ -68,8 +69,13 @@ public class MediaFolderFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<MediaFolderModel> mediaFolderModels) {
 //            super.onPostExecute(mediaFolderModels);
-            mediaAdapter = new MediaFolderAdapter(getActivity(), mediaFolderModels);
-            recyclerView.setAdapter(mediaAdapter);
+            if (mediaFolderModels == null){
+                Toast.makeText(getActivity(),"没有可供选择的图片",Toast.LENGTH_SHORT).show();
+            }else {
+                mediaAdapter = new MediaFolderAdapter(getActivity(), mediaFolderModels);
+                recyclerView.setAdapter(mediaAdapter);
+            }
+
         }
     }
 
@@ -89,6 +95,7 @@ public class MediaFolderFragment extends Fragment {
 //        String orderBy = MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
         String orderBy = MediaStore.Images.Media.DATE_TAKEN;
         cursor = getActivity().getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+        if (cursor.getCount() == 0){return null;}
 //        cursor = getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
