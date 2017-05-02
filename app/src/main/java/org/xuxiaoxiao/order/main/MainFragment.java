@@ -133,6 +133,7 @@ public class MainFragment extends Fragment {
         public void onBindViewHolder(RestaurantViewHolder holder, int position) {
 //            holder.restaurantName.setText(restaurants.get(position).getName());
 //            holder.restaurantRate.setText(String.valueOf(restaurants.get(position).getRate()));
+            holder.root.setTag(position);
             holder.bind(restaurants.get(position));
 
         }
@@ -144,6 +145,7 @@ public class MainFragment extends Fragment {
     }
 
     private class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnLongClickListener{
+        private View root;
         Restaurant restaurant;
         TextView restaurantName;
         TextView restaurantRate;
@@ -151,6 +153,7 @@ public class MainFragment extends Fragment {
 
         public RestaurantViewHolder(View itemView) {
             super(itemView);
+            this.root = itemView;
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name_text_view);
             restaurantRate = (TextView) itemView.findViewById(R.id.restaurant_rate_text_view);
             itemView.setOnClickListener(this);
@@ -164,13 +167,14 @@ public class MainFragment extends Fragment {
 //            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant.getName()));
 //            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
 //            startActivity(intent);
-
-            Log.d("WQWQ","你点击了我");
+            int temp =(int) v.getTag();
+            Log.d("WQWQ","你单击了第" + temp + "个元素");
 
         }
         @Override
         public boolean onLongClick(View v) {
-            Log.d("WQWQ","你长按了我");
+            int temp =(int) v.getTag();
+            Log.d("WQWQ","你*长按*了第" + temp + "个元素");
             // 返回 true 的时候，不会在长按事件之后 产生 点击事件
             return true;
         }
