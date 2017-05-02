@@ -3,6 +3,8 @@ package org.xuxiaoxiao.order.dish;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +17,9 @@ import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.addimage.MediaFolderActivity;
-import org.xuxiaoxiao.order.model.Dish;
 
-import java.io.File;
-
-import cn.bmob.v3.datatype.BmobFile;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UploadFileListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by WuQiang on 2017/4/27.
@@ -32,12 +29,15 @@ public class NewDishActivity extends AppCompatActivity {
     private static final String RESTAURANT_NAME = "org.xuxiaoxiao.order.newdishactivity.restaurantname";
     private static final String IMAGE_PATH = "org.xuxiaoxiao.newdishactivity.image_path";
     private static final String BUNDLE_IMAGE_PATH = "org.xuxiaoxiao.newdishactivity.bundle_image_path";
-    private String restaurantName ,imagePath;
+    private String restaurantName, imagePath;
     private ImageView dishImageView;
+    CoordinatorLayout container;
 
     static final String STATE_DISH_NAME = "StateDishName";
     static final String STATE_DISH_PRICE = "StateDishPrice";
     static final String STATE_DISH_DISCR = "StateDishDiscr";
+    private EditText dishPrice;
+    private EditText dishDiscription;
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class NewDishActivity extends AppCompatActivity {
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
+
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         // Always call the superclass so it can restore the view hierarchy
         super.onRestoreInstanceState(savedInstanceState);
@@ -64,14 +65,14 @@ public class NewDishActivity extends AppCompatActivity {
 //    return intent;
 //}
 
-public static Intent newBundleImagePathIntent(Context packageContext,String imagePath){
-    Intent intent = new Intent(packageContext,NewDishActivity.class);
+    public static Intent newBundleImagePathIntent(Context packageContext, String imagePath) {
+        Intent intent = new Intent(packageContext, NewDishActivity.class);
 //    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
-    Bundle args = new Bundle();
-    args.putString(BUNDLE_IMAGE_PATH,imagePath);
-    intent.putExtras(args);
-    return intent;
-}
+        Bundle args = new Bundle();
+        args.putString(BUNDLE_IMAGE_PATH, imagePath);
+        intent.putExtras(args);
+        return intent;
+    }
 
 //    @Override
 //    protected void onNewIntent(Intent intent) {
@@ -92,17 +93,17 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
 //        Log.i("WQWQ", "onCreate");
 //        restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
 
-
+        container = (CoordinatorLayout) findViewById(R.id.container);
         EditText dishName = (EditText) findViewById(R.id.dish_name_edit_text);
         dishName.setText(restaurantName);
-        EditText distPrice = (EditText) findViewById(R.id.dish_price_edit_text);
-        EditText distDiscription = (EditText) findViewById(R.id.dish_discription_edit_text);
+        dishPrice = (EditText) findViewById(R.id.dish_price_edit_text);
+        dishDiscription = (EditText) findViewById(R.id.dish_discription_edit_text);
         Button addDishButton = (Button) findViewById(R.id.add_dish);
         Button selectImage = (Button) findViewById(R.id.select_image);
         dishImageView = (ImageView) findViewById(R.id.dish_image_view);
-        if (imagePath != null){  // 如果能找到 imagePath 说明是从选择图片的Fragment 来的，把图片送去显示
-            Log.d("WQWQ",imagePath);
-            Toast.makeText(this,imagePath,Toast.LENGTH_SHORT).show();
+        if (imagePath != null) {  // 如果能找到 imagePath 说明是从选择图片的Fragment 来的，把图片送去显示
+            Log.d("WQWQ", imagePath);
+            Toast.makeText(this, imagePath, Toast.LENGTH_SHORT).show();
             Glide
                     .with(this)
                     .load(imagePath)
@@ -125,9 +126,37 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
         addDishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String innerDishPrice = dishPrice.getText().toString().trim();
+                String innerDishDiscription = dishDiscription.getText().toString().trim();
+                if (innerDishDiscription.length() < 1) {
+                    dishDiscription.setError("输入不能为空");
+                }
+                if (innerDishPrice.length() < 1) {
+                    dishPrice.setError("输入不能为空");
+                }
+                Pattern p = Pattern.compile("[0-9]*");
+                Matcher m = p.matcher(innerDishPrice);
+                if (!m.matches()) {
+                    dishPrice.setError("输入的必须是整数数字");
+                }
+                if (dishImageView.getDrawable() == null){
+                    Snackbar.make(container, "请为您的菜品选择一张图片", Snackbar.LENGTH_LONG).show();
+                    Log.d("WQWQ","没有图片");
+                }else {
+                    Log.d("WQWQ","有图片");
+
+                }
+                if ((innerDishDiscription.length() > 1) && (innerDishPrice.length() > 1) && (m.matches())&&(dishImageView.getDrawable() != null)) {
+                    Log.d("WQWQ","可以执行了");
+
+                }else {
+                    Log.d("WQWQ","不行！！");
+
+                }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        /*
                         final BmobFile bmobFile = new BmobFile(new File(imagePath));
 
                         bmobFile.uploadblock(new UploadFileListener() {
@@ -163,7 +192,7 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
                             }
                         });
 
-
+*/
 
                     }
                 }).start();
@@ -178,7 +207,8 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
             }
         });
     }
-// 为了传递饭店的名称
+
+    // 为了传递饭店的名称
     public static Intent newIntent(Context packageContext, String restaurantName) {
         // 可以在其它地方调用的，能够传递数据的 Intent
         Intent intent = new Intent(packageContext, NewDishActivity.class);
@@ -188,12 +218,12 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1 && resultCode==4){
-            if(data != null) {
+        if (requestCode == 1 && resultCode == 4) {
+            if (data != null) {
                 imagePath = data.getStringExtra("back");
-                if (imagePath != null){  // 如果能找到 imagePath 说明是从选择图片的Fragment 来的，把图片送去显示
-                    Log.d("WQWQ",imagePath);
-                    Toast.makeText(this,imagePath,Toast.LENGTH_SHORT).show();
+                if (imagePath != null) {  // 如果能找到 imagePath 说明是从选择图片的Fragment 来的，把图片送去显示
+                    Log.d("WQWQ", imagePath);
+                    Toast.makeText(this, imagePath, Toast.LENGTH_SHORT).show();
                     Glide
                             .with(this)
                             .load(imagePath)
@@ -209,8 +239,7 @@ public static Intent newBundleImagePathIntent(Context packageContext,String imag
  *               Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作", bmobFile, restaurantName);
  newDish.save(new SaveListener<String>() {
 
-@Override
-public void done(String objectId, BmobException e) {
+@Override public void done(String objectId, BmobException e) {
 if (e == null) {
 Log.i("WQWQ", "创建数据成功：" + objectId);
 

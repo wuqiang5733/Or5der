@@ -1,5 +1,7 @@
 package org.xuxiaoxiao.order.main;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -42,9 +44,11 @@ public class MainFragment extends Fragment {
     RecyclerView restaurantRecyclerView;
     LinearLayoutManager linearLayoutManager;
     RestaurantAdapter restaurantAdapter;
+//    ProgressBar mainPrograssBar;
 
     private List<Restaurant> restaurants =
             Collections.synchronizedList(new ArrayList<Restaurant>());
+    private View _avatarProgressFrame; // 头像上转的那个圈
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +60,8 @@ public class MainFragment extends Fragment {
 //        new LoadWordsThread().start();
         restaurantAdapter = new RestaurantAdapter();
 
-        new RestaurantAsyncTask().execute();
+        new RestaurantAsyncTask(getActivity()).execute();
+
 
     }
 
@@ -74,6 +79,10 @@ public class MainFragment extends Fragment {
 //        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // 设置线性布局为横向（默认为纵向）
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantRecyclerView.setAdapter(restaurantAdapter);
+//        _avatarProgressFrame = view.findViewById(R.id.activity_profile_avatarProgressFrame); // 头像上转的那个圈
+//        _avatarProgressFrame.setVisibility(View.VISIBLE);
+
+//        mainPrograssBar = (ProgressBar)view.findViewById(R.id.main_progress_bar);
 
 //        restaurantAdapter = new RestaurantAdapter(restaurants);
 //        restaurantRecyclerView.setAdapter(restaurantAdapter);
@@ -183,17 +192,78 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public class RestaurantAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            fetchRestaurantData();
-            return null;
+    public class RestaurantAsyncTask extends AsyncTask<Void, Integer, Void> {
+        ProgressDialog pdialog;
+        public RestaurantAsyncTask(Context context) {
+//            pdialog = new ProgressDialog(context, 0);
+//            pdialog.setButton("取消", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int i) {
+//                    dialog.cancel();
+//                }
+//            });
+//            pdialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                public void onCancel(DialogInterface dialog) {
+//                    getActivity().finish();
+//                }
+//            });
+//            pdialog.setCancelable(true);
+//            pdialog.setMax(100);
+//            pdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            pdialog.show();
+//            ProgressBar progressBar = new ProgressBar(context);
+//            progressBar
         }
 
         @Override
+        protected void onPreExecute() {
+            // 任务启动，可以在这里显示一个对话框，这里简单处理
+//            message.setText(R.string.task_started);
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+//            fetchRestaurantData();
+
+            //        final ArrayList<Restaurant> restaurants = new ArrayList<>();
+            // Fetch data from website
+            BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
+            query.setLimit(10);
+            query.findObjects(new FindListener<Restaurant>() {
+                @Override
+                public void done(List<Restaurant> object, BmobException e) {
+//                    int temp = 0;
+                    if (e == null) {
+                        // Success
+                        for (Restaurant restaurant : object) {
+                            Log.d("WQWQ", restaurant.getName());
+                            restaurants.add(new Restaurant(restaurant.getName(), restaurant.getRate()));
+//                                EventBus.getDefault().post(new RestaurantReadyEvent(restaurant));
+                            restaurantAdapter.notifyDataSetChanged();
+//                            publishProgress(temp += 20);
+//                            Thread.sleep(100);
+                        }
+                    } else {
+                        // Fail
+                        Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    }
+//                    pdialog.dismiss();
+
+                }
+            });
+
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            // 更新进度
+//            System.out.println(""+values[0]);
+//            message.setText(""+values[0]);
+//            pdialog.setProgress(values[0]);
+        }
+        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+//            _avatarProgressFrame.setVisibility(View.GONE);
+//            mainPrograssBar.setVisibility(View.GONE);
         }
     }
 
@@ -217,6 +287,7 @@ public class MainFragment extends Fragment {
                     // Fail
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                 }
+
             }
         });
     }

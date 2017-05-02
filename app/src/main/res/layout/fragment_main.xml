@@ -16,6 +16,28 @@
 
     </android.support.v7.widget.RecyclerView>
 
+
+
 </RelativeLayout>
 
     <!--android:background="@color/cardview_dark_background"-->
+    <!--http://blog.csdn.net/limingchuan123456789/article/details/8041607-->
+
+<!--<FrameLayout-->
+<!--android:id="@+id/activity_profile_avatarProgressFrame"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_alignBottom="@id/recycler_view_restaurant"-->
+<!--android:layout_alignEnd="@id/recycler_view_restaurant"-->
+<!--android:layout_alignStart="@id/recycler_view_restaurant"-->
+<!--android:layout_alignTop="@id/recycler_view_restaurant"-->
+<!--android:background="#aa000000"-->
+<!--android:clickable="true">-->
+<!--&lt;!&ndash;indeterminateOnly:you're unsure how long the action will take&ndash;&gt;-->
+<!--<ProgressBar-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:indeterminateOnly="true" />-->
+
+<!--</FrameLayout>-->
