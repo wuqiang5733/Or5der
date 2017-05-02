@@ -14,9 +14,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +41,10 @@ import cn.bmob.v3.listener.FindListener;
  */
 
 public class DishesFragment extends Fragment {
+
+    LinearLayout orderedDishBottomBarLinearLayout;
+    TextView orderedDishesDetail;
+    Button orderedDishesCheckButton;
     RecyclerView recyclerView;
     //    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
@@ -51,10 +57,14 @@ public class DishesFragment extends Fragment {
 
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
-    // 决定是否显示 复选框
-    private boolean isshowBox = false;
+    // 决定是否是在点菜模式下
+    private boolean isOrderMode = false;
     // 存储勾选框状态的map集合
     private Map<Integer, Boolean> map = new HashMap<>();
+    // 为了及时的显示点了几道菜而做的变量
+    private int orderedDishshSum = 0;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,12 +120,19 @@ public class DishesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dishsh, container, false);
+        orderedDishBottomBarLinearLayout = (LinearLayout)view.findViewById(R.id.order_dish_bottom_bar_linear_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
 //        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
 //        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
 //        linearLayoutManager = new LinearLayoutManager(getActivity());
 //        recyclerView.setLayoutManager(linearLayoutManager);
-
+        orderedDishesDetail = (TextView)view.findViewById(R.id.ordered_dishes_detail_text_view);
+        orderedDishesCheckButton = (Button)view.findViewById(R.id.ordered_dishes_check_button);
+        if (orderedDishshSum < 1){
+            orderedDishesCheckButton.setEnabled(false);
+        }else {
+            orderedDishesCheckButton.setEnabled(true);
+        }
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 //        recyclerView.setHasFixedSize(true);
 
@@ -144,7 +161,7 @@ public class DishesFragment extends Fragment {
         public void onBindViewHolder(DishesViewHolder holder, final int position) {
             holder.bind(dishes.get(position));
             //
-            if (isshowBox) {
+            if (isOrderMode) {
                 holder.orderDishCheckBox.setVisibility(View.VISIBLE);
             } else {
                 holder.orderDishCheckBox.setVisibility(View.INVISIBLE);
@@ -161,8 +178,16 @@ public class DishesFragment extends Fragment {
                     for (int i = 0; i < map.size(); i++) {
                         if (map.get(i)) {
                             Log.d("TAG", "你选了第：" + i + "项");
+                            orderedDishshSum ++;
+                            orderedDishesDetail.setText("已经点了" + orderedDishshSum + "道菜");
                         }
                     }
+                    if (orderedDishshSum < 1){
+                        orderedDishesCheckButton.setEnabled(false);
+                    }else {
+                        orderedDishesCheckButton.setEnabled(true);
+                    }
+                    orderedDishshSum = 0;
                 }
             });
             // 设置CheckBox的状态
@@ -183,7 +208,7 @@ public class DishesFragment extends Fragment {
         //设置是否显示CheckBox
         public void setShowBox() {
             //取反
-            isshowBox = !isshowBox;
+            isOrderMode = !isOrderMode;
         }
 
         //初始化map集合,默认为不选中
@@ -248,15 +273,20 @@ public class DishesFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.new_restaurant:
-                Intent intent = NewDishActivity.newIntent(getActivity(), restaurantName);
-                startActivity(intent);
-                return true;
             case R.id.order_dish:
+                orderedDishBottomBarLinearLayout.setVisibility(isOrderMode ? View.GONE : View.VISIBLE);
                 dishesAdapter.setShowBox();
                 dishesAdapter.notifyDataSetChanged();
                 dishesAdapter.initMap();
+                if(isOrderMode){ // 如果不在点菜模式下了
+                    orderedDishshSum = -1;
+                }
                 return true;
+            case R.id.new_dish:
+                Intent intent = NewDishActivity.newIntent(getActivity(), restaurantName);
+                startActivity(intent);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
