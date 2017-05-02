@@ -17,9 +17,16 @@ import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.addimage.MediaFolderActivity;
+import org.xuxiaoxiao.order.model.Dish;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 /**
  * Created by WuQiang on 2017/4/27.
@@ -94,8 +101,8 @@ public class NewDishActivity extends AppCompatActivity {
 //        restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
 
         container = (CoordinatorLayout) findViewById(R.id.container);
-        EditText dishName = (EditText) findViewById(R.id.dish_name_edit_text);
-        dishName.setText(restaurantName);
+        final EditText dishName = (EditText) findViewById(R.id.dish_name_edit_text);
+//        dishName.setText(restaurantName);
         dishPrice = (EditText) findViewById(R.id.dish_price_edit_text);
         dishDiscription = (EditText) findViewById(R.id.dish_discription_edit_text);
         Button addDishButton = (Button) findViewById(R.id.add_dish);
@@ -126,8 +133,13 @@ public class NewDishActivity extends AppCompatActivity {
         addDishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String innerDishPrice = dishPrice.getText().toString().trim();
-                String innerDishDiscription = dishDiscription.getText().toString().trim();
+
+                final String innerDishName = dishName.getText().toString().trim();
+                final String innerDishPrice = dishPrice.getText().toString().trim();
+                final String innerDishDiscription = dishDiscription.getText().toString().trim();
+                if (innerDishName.length() < 1) {
+                    dishName.setError("输入不能为空");
+                }
                 if (innerDishDiscription.length() < 1) {
                     dishDiscription.setError("输入不能为空");
                 }
@@ -146,17 +158,13 @@ public class NewDishActivity extends AppCompatActivity {
                     Log.d("WQWQ","有图片");
 
                 }
-                if ((innerDishDiscription.length() > 1) && (innerDishPrice.length() > 1) && (m.matches())&&(dishImageView.getDrawable() != null)) {
+                if ((innerDishName.length() > 1)&&(innerDishDiscription.length() > 1) && (innerDishPrice.length() > 1) && (m.matches())&&(dishImageView.getDrawable() != null)) {
                     Log.d("WQWQ","可以执行了");
 
-                }else {
-                    Log.d("WQWQ","不行！！");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        /*
                         final BmobFile bmobFile = new BmobFile(new File(imagePath));
 
                         bmobFile.uploadblock(new UploadFileListener() {
@@ -167,15 +175,17 @@ public class NewDishActivity extends AppCompatActivity {
                                     //bmobFile.getFileUrl()--返回的上传文件的完整地址
                                     Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
 
-                                    Dish newDish = new Dish("扣肉", 28, "采用传统工艺制作",new BmobFile("512151","",bmobFile.getFileUrl()), restaurantName);
+                                    Dish newDish = new Dish(innerDishName, Integer.parseInt(innerDishPrice), innerDishDiscription,new BmobFile("512151","",bmobFile.getFileUrl()), restaurantName);
                                     newDish.save(new SaveListener<String>() {
 
                                         @Override
                                         public void done(String objectId, BmobException e) {
                                             if (e == null) {
                                                 Log.i("WQWQ", "创建数据成功：" + objectId);
+                                                Snackbar.make(container, "添加成功，可继续添加，或者返回", Snackbar.LENGTH_LONG).show();
 
                                             } else {
+                                                Snackbar.make(container, "新菜品添加失败，可能网络不好", Snackbar.LENGTH_LONG).show();
                                                 Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
                                             }
                                         }
@@ -192,10 +202,16 @@ public class NewDishActivity extends AppCompatActivity {
                             }
                         });
 
-*/
 
-                    }
-                }).start();
+
+                        }
+                    }).start();
+
+                }else {
+                    Log.d("WQWQ","不行！！");
+
+                }
+
             }
         });
         selectImage.setOnClickListener(new View.OnClickListener() {
@@ -247,8 +263,21 @@ Log.i("WQWQ", "创建数据成功：" + objectId);
 Log.i("WQWQ", "失败：" + e.getMessage() + "," + e.getErrorCode());
 }
 }
-});
- *
+});悬浮按钮： http://www.cnblogs.com/itgungnir/p/6210762.html
+
+ /**
+ * 为列表添加测试数据
+ */
+/*
+private void initData() {
+    File directory = Environment.getExternalStorageDirectory();
+    File[] files = directory.listFiles();
+    list = new ArrayList<>();
+    for (File file : files) {
+        list.add(file.getName());
+    }
+}
+
  */
 }
 

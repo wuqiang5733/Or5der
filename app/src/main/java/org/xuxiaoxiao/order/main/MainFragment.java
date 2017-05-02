@@ -21,9 +21,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.xuxiaoxiao.order.R;
-import org.xuxiaoxiao.order.dish.DishActivity;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
-import org.xuxiaoxiao.order.infrastructure.RecyclerViewClickListener2;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
@@ -99,20 +97,20 @@ public class MainFragment extends Fragment {
 //
 //            }
 //        });
-        restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
-                new RecyclerViewClickListener2.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-//                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onItemLongClick(View view, int position) {
-//                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-                    }
-                }));
+//        restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
+//                new RecyclerViewClickListener2.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+////                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
+//                        startActivity(intent);
+//                    }
+//
+//                    @Override
+//                    public void onItemLongClick(View view, int position) {
+////                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }));
         return view;
     }
 
@@ -145,7 +143,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnLongClickListener{
         Restaurant restaurant;
         TextView restaurantName;
         TextView restaurantRate;
@@ -156,6 +154,7 @@ public class MainFragment extends Fragment {
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name_text_view);
             restaurantRate = (TextView) itemView.findViewById(R.id.restaurant_rate_text_view);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
@@ -165,13 +164,23 @@ public class MainFragment extends Fragment {
 //            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant.getName()));
 //            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
 //            startActivity(intent);
-        }
 
+            Log.d("WQWQ","你点击了我");
+
+        }
+        @Override
+        public boolean onLongClick(View v) {
+            Log.d("WQWQ","你长按了我");
+            // 返回 true 的时候，不会在长按事件之后 产生 点击事件
+            return true;
+        }
         public void bind(Restaurant restaurant) {
             this.restaurant = restaurant;
             restaurantName.setText(restaurant.getName());
             restaurantRate.setText(String.valueOf(restaurant.getRate()));
         }
+
+
     }
 
     @Override
