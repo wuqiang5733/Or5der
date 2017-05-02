@@ -21,7 +21,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.dish.DishActivity;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
+import org.xuxiaoxiao.order.infrastructure.RecyclerViewClickListener2;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
@@ -97,20 +99,20 @@ public class MainFragment extends Fragment {
 //
 //            }
 //        });
-//        restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
-//                new RecyclerViewClickListener2.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(View view, int position) {
-////                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-//                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
-//                        startActivity(intent);
-//                    }
-//
-//                    @Override
-//                    public void onItemLongClick(View view, int position) {
-////                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }));
+        restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
+                new RecyclerViewClickListener2.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+//                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onItemLongClick(View view, int position) {
+//                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    }
+                }));
         return view;
     }
 
@@ -167,8 +169,8 @@ public class MainFragment extends Fragment {
 //            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant.getName()));
 //            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
 //            startActivity(intent);
-            int temp =(int) v.getTag();
-            Log.d("WQWQ","你单击了第" + temp + "个元素");
+//            int temp =(int) v.getTag();
+//            Log.d("WQWQ","你单击了第" + temp + "个元素");
 
         }
         @Override

@@ -14,6 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +26,9 @@ import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -38,7 +42,7 @@ public class DishesFragment extends Fragment {
     RecyclerView recyclerView;
     //    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
-//    ArrayList<Dish> dishes = new ArrayList<>();
+    //    ArrayList<Dish> dishes = new ArrayList<>();
     String restaurantName;
     GridLayoutManager gridLayoutManager;
 
@@ -47,7 +51,10 @@ public class DishesFragment extends Fragment {
 
     private static final String RESTAURANT_NAME =
             "org.xuxiaoxiao.restaurant_name";
-
+    // 决定是否显示 复选框
+    private boolean isshowBox = false;
+    // 存储勾选框状态的map集合
+    private Map<Integer, Boolean> map = new HashMap<>();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,14 +141,56 @@ public class DishesFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(DishesViewHolder holder, int position) {
+        public void onBindViewHolder(DishesViewHolder holder, final int position) {
             holder.bind(dishes.get(position));
+            //
+            if (isshowBox) {
+                holder.orderDishCheckBox.setVisibility(View.VISIBLE);
+            } else {
+                holder.orderDishCheckBox.setVisibility(View.INVISIBLE);
+            }
+
+            //设置checkBox改变监听
+            holder.orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //用map集合保存
+                    map.put(position, isChecked);
+
+                    for (int i = 0; i < map.size(); i++) {
+                        if (map.get(i)) {
+                            Log.d("TAG", "你选了第：" + i + "项");
+                        }
+                    }
+                }
+            });
+            // 设置CheckBox的状态
+            if (map.get(position) == null) {
+                map.put(position, false);
+            }
+            holder.orderDishCheckBox.setChecked(map.get(position));
 
         }
 
         @Override
         public int getItemCount() {
             return dishes.size();
+        }
+
+
+
+        //设置是否显示CheckBox
+        public void setShowBox() {
+            //取反
+            isshowBox = !isshowBox;
+        }
+
+        //初始化map集合,默认为不选中
+        public void initMap() {
+            for (int i = 0; i < dishes.size(); i++) {
+                map.put(i, false);
+            }
         }
     }
 
@@ -151,6 +200,7 @@ public class DishesFragment extends Fragment {
         TextView dishdiscription;
         TextView disPhotoUrl;
         ImageView disImage;
+        CheckBox orderDishCheckBox;
         //        WebImageView imageView;
         Dish dish;
 
@@ -162,6 +212,7 @@ public class DishesFragment extends Fragment {
             dishdiscription = (TextView) itemView.findViewById(R.id.dish_discription_text_view);
             disPhotoUrl = (TextView) itemView.findViewById(R.id.dish_photourl_text_view);
             disImage = (ImageView) itemView.findViewById(R.id.dish_image_view);
+            orderDishCheckBox = (CheckBox) itemView.findViewById(R.id.order_dish_menu);
 //            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
 
         }
@@ -191,7 +242,7 @@ public class DishesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.new_restaurant, menu);
+        inflater.inflate(R.menu.new_dish, menu);
     }
 
     @Override
@@ -201,10 +252,16 @@ public class DishesFragment extends Fragment {
                 Intent intent = NewDishActivity.newIntent(getActivity(), restaurantName);
                 startActivity(intent);
                 return true;
+            case R.id.order_dish:
+                dishesAdapter.setShowBox();
+                dishesAdapter.notifyDataSetChanged();
+                dishesAdapter.initMap();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
     public class RestaurantAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -236,7 +293,7 @@ public class DishesFragment extends Fragment {
                     // Success
                     for (Dish dish : object) {
 //                                Log.d("WQWQ",restaurant.getName());
-                        dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(),dish.getRestaurantName()));
+                        dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
 //                            EventBus.getDefault().post(new DishReadyEvent(dish));
                         dishesAdapter.notifyDataSetChanged();
 

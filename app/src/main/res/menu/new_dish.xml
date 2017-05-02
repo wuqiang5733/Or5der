@@ -7,8 +7,9 @@
         android:title="@string/new_dish"
         app:showAsAction="ifRoom|withText"/>
 
-    <!--<item-->
-        <!--android:id="@+id/show_subtitle"-->
-        <!--android:title="@string/show_subtitle"-->
-        <!--app:showAsAction="ifRoom"/>-->
+    <item
+    android:id="@+id/order_dish"
+    android:title="点菜"
+    app:showAsAction="always"/>
+
 </menu>

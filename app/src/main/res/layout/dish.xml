@@ -12,18 +12,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="4dp"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/dish_image_view"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
             card_view:srcCompat="@mipmap/ic_launcher" />
 
-        <!--<org.xuxiaoxiao.order.infrastructure.WebImageView-->
-            <!--android:id="@+id/dish_web_image_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
 
         <TextView
             android:id="@+id/dish_name_text_view"
@@ -40,10 +38,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/dish_photourl_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dish_photourl_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <CheckBox
+                android:id="@+id/order_dish_menu"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:visibility="invisible" />
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
