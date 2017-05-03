@@ -202,6 +202,10 @@ public class MainFragment extends Fragment {
                 Intent intent = new Intent(getContext(), NewRestaurantActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.qr_bitmap:
+                Intent qRCodeBitmapintent = new Intent(getContext(), CreateQRCodeBitmapActivity.class);
+                startActivity(qRCodeBitmapintent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
