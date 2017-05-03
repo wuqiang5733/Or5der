@@ -39,7 +39,7 @@ public class OrderedDishesFragment extends Fragment {
 
     RecyclerView recyclerView;
     OrderDishesAdapter orderDishesAdapter;
-    Unity myUnity;
+    Utility myUtility;
 
     public static Fragment newInstance(ArrayList<String> orderedDishesArrayList) {
         Bundle args = new Bundle();
@@ -57,7 +57,7 @@ public class OrderedDishesFragment extends Fragment {
             Log.d("WQWQ", s);
         }
         Log.d("WQWQ", getClass().getSimpleName());
-        myUnity = new Unity();
+        myUtility = new Utility();
     }
 
     @Nullable
@@ -122,7 +122,7 @@ public class OrderedDishesFragment extends Fragment {
                             // 我是是在应该更新进度条的时候，传送数据的，做一个判断，是为了只传送一次
                             if (asyncOrderDishes.size() == object.size()) {
 //                                publishProgress(asyncOrderDishes);
-                                myUnity.MyUpdateProgressBar(asyncOrderDishes);
+                                myUtility.receiveDataFromAsynck(asyncOrderDishes);
 
                             }
                         }
@@ -173,11 +173,11 @@ public class OrderedDishesFragment extends Fragment {
         }
     }
 
-    public class Unity {
-        public Unity() {
+    public class Utility {
+        public Utility() {
         }
 
-        public void MyUpdateProgressBar(ArrayList<Dish> values) {
+        public void receiveDataFromAsynck(ArrayList<Dish> values) {
             progressBar.setVisibility(View.GONE);
             for (Dish dish : values) {
                 Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
