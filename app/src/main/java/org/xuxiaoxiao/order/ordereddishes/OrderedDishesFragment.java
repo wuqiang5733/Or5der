@@ -115,6 +115,9 @@ public class OrderedDishesFragment extends Fragment {
                     if (e == null) {
                         // Success
                         for (Dish dish : object) {
+                            if (isCancelled())
+                                break;
+
 //                            Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
                             asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
 //
@@ -137,10 +140,12 @@ public class OrderedDishesFragment extends Fragment {
         @Override
         protected void onProgressUpdate( ArrayList<Dish>... values) {
             // 把下载完成的数据传给全局变量，并通知 Adapter
-            orderDishes = values[0];
-            orderDishesAdapter.notifyDataSetChanged();
-            values[0] = null;
-            progressBar.setVisibility(View.GONE);
+            if (!isCancelled()) {
+                orderDishes = values[0];
+                orderDishesAdapter.notifyDataSetChanged();
+                values[0] = null;
+                progressBar.setVisibility(View.GONE);
+            }
         }
 
     }
