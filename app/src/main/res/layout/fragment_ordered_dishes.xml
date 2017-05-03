@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -19,5 +20,43 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignBottom="@+id/ordered_dishes_recycler_view"
+        >
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="确认定单" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="或" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="取消" />
+    </LinearLayout>
+
 
 </RelativeLayout>
+
+    <!--android:layout_below 在某元素的下方-->
+    <!--android:layout_above 在某元素的的上方-->
+    <!--android:layout_toLeftOf 在某元素的左边-->
+    <!--android:layout_toRightOf 在某元素的右边-->
+    <!--android:layout_alignTop 本元素的上边缘和某元素的的上边缘对齐-->
+    <!--android:layout_alignLeft 本元素的左边缘和某元素的的左边缘对齐-->
+    <!--android:layout_alignBottom 本元素的下边缘和某元素的的下边缘对齐-->
+    <!--android:layout_alignRight 本元素的右边缘和某元素的的右边缘对齐-->

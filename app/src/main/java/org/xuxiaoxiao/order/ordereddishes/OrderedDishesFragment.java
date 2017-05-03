@@ -56,11 +56,11 @@ public class OrderedDishesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         orderedDishesArrayList = getArguments().getStringArrayList(ORDERED_DISHES);
-        for (String s : orderedDishesArrayList) {
-            Log.d("WQWQ", s);
-        }
-        Log.d("WQWQ", getClass().getSimpleName());
-        myUtility = new Utility();
+//        for (String s : orderedDishesArrayList) {
+//            Log.d("WQWQ", s);
+//        }
+//        Log.d("WQWQ", getClass().getSimpleName());
+//        myUtility = new Utility();
     }
 
     @Nullable
@@ -90,7 +90,7 @@ public class OrderedDishesFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
-            Log.d("WQWQ", "onPreExecuteonPreExecuteonPreExecuteonPreExecute");
+//            Log.d("WQWQ", "onPreExecuteonPreExecuteonPreExecuteonPreExecute");
 
         }
 
@@ -117,18 +117,12 @@ public class OrderedDishesFragment extends Fragment {
                         for (Dish dish : object) {
 //                            Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
                             asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
-//                            Log.d("WQWQ", "生成每一条查询结果的长度：" + asyncOrderDishes.size());
-                            try {
-                                Thread.sleep(200);
-                            } catch (InterruptedException e1) {
-                                e1.printStackTrace();
-                            }
+//
                             //调用publishProgress公布进度,最后onProgressUpdate方法将被执行
                             // 我是是在应该更新进度条的时候，传送数据的，做一个判断，是为了只传送一次
                             if (asyncOrderDishes.size() == object.size()) {
                                 publishProgress(asyncOrderDishes);
 //                                myUtility.receiveDataFromAsynck(asyncOrderDishes);
-
                             }
                         }
                     } else {
@@ -137,19 +131,15 @@ public class OrderedDishesFragment extends Fragment {
                     }
                 }
             });
-//            Log.d("WQWQ", "返回之前的长度：" + asyncOrderDishes.size());
             return null;
         }
 
         @Override
         protected void onProgressUpdate( ArrayList<Dish>... values) {
-            Log.d("WQWQ", "更新进度条---更新进度条--更新进度条");
-            for (Dish dish : values[0]) {
-                Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
-            }
             // 把下载完成的数据传给全局变量，并通知 Adapter
             orderDishes = values[0];
             orderDishesAdapter.notifyDataSetChanged();
+            values[0] = null;
             progressBar.setVisibility(View.GONE);
         }
 
