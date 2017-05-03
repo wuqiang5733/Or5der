@@ -119,7 +119,7 @@ public class OrderedDishesFragment extends Fragment {
                             asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
 //                            Log.d("WQWQ", "生成每一条查询结果的长度：" + asyncOrderDishes.size());
                             try {
-                                Thread.sleep(400);
+                                Thread.sleep(200);
                             } catch (InterruptedException e1) {
                                 e1.printStackTrace();
                             }
@@ -144,13 +144,13 @@ public class OrderedDishesFragment extends Fragment {
         @Override
         protected void onProgressUpdate( ArrayList<Dish>... values) {
             Log.d("WQWQ", "更新进度条---更新进度条--更新进度条");
-            progressBar.setVisibility(View.GONE);
             for (Dish dish : values[0]) {
                 Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
             }
             // 把下载完成的数据传给全局变量，并通知 Adapter
             orderDishes = values[0];
             orderDishesAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
         }
 
     }
