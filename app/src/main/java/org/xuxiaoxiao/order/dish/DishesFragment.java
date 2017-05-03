@@ -21,8 +21,11 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.model.Dish;
@@ -69,6 +72,8 @@ public class DishesFragment extends Fragment {
     // 要传送的点了的菜品，第一个元素是饭店的名字
     private ArrayList<String> orderedDishesArrayList = new ArrayList<>();
     private FloatingActionButton fab;
+    // 扫描二维码用的一个变量
+    private String toast;
 
 
     @Override
@@ -140,6 +145,12 @@ public class DishesFragment extends Fragment {
         orderedDishesDetail = (TextView)view.findViewById(R.id.ordered_dishes_detail_text_view);
         orderedDishesCheckButton = (Button)view.findViewById(R.id.ordered_dishes_check_button);
         fab = (FloatingActionButton) view.findViewById(R.id.refresh);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanFromFragment();
+            }
+        });
         if (orderedDishshSum < 1){
             orderedDishesCheckButton.setEnabled(false);
         }else {
@@ -370,6 +381,39 @@ public class DishesFragment extends Fragment {
                 }
             }
         });
+
+    }
+    public void scanFromFragment() {
+        IntentIntegrator.forSupportFragment(this).initiateScan();
+    }
+
+    private void displayToast() {
+        if(getActivity() != null && toast != null) {
+            Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
+            toast = null;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                toast = "Cancelled from fragment";
+            } else {
+                toast = "Scanned from fragment: " + result.getContents();
+            }
+
+            // At this point we may or may not have a reference to the activity
+            displayToast();
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        displayToast();
     }
     /**
      * 因此，在需要更新进度值时，AsyncTask的基本生命周期过程为：
