@@ -34,6 +34,7 @@
         <activity android:name=".dish.NewDishActivity"></activity>
         <activity android:name=".addimage.MediaFolderActivity"></activity>
         <activity android:name=".addimage.MediaItemActiviey"></activity>
+        <activity android:name=".ordereddishes.OrderedDishesActivity"></activity>
     </application>
 
 </manifest>

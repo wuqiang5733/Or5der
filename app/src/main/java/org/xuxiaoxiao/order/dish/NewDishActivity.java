@@ -40,7 +40,7 @@ public class NewDishActivity extends AppCompatActivity {
     private ImageView dishImageView;
     CoordinatorLayout container;
 
-    static final String STATE_DISH_NAME = "StateDishName";
+    static final String STATE_RESTAURANT_NAME = "StateDishName";
     static final String STATE_DISH_PRICE = "StateDishPrice";
     static final String STATE_DISH_DISCR = "StateDishDiscr";
     private EditText dishPrice;
@@ -49,7 +49,7 @@ public class NewDishActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
-        savedInstanceState.putString(STATE_DISH_NAME, restaurantName);
+        savedInstanceState.putString(STATE_RESTAURANT_NAME, restaurantName);
 //        savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -61,7 +61,7 @@ public class NewDishActivity extends AppCompatActivity {
 
 
         // Restore state members from saved instance
-        restaurantName = savedInstanceState.getString(STATE_DISH_NAME);
+        restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME);
 //        mCurrentLevel = savedInstanceState.getInt(STATE_LEVEL);
     }
 

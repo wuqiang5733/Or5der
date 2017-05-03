@@ -307,3 +307,4 @@ public class MainFragment extends Fragment {
         });
     }
 }
+// http://blog.csdn.net/liuhe688/article/details/6532519

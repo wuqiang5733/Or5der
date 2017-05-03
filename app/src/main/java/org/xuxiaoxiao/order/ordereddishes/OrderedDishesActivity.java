@@ -1,4 +1,4 @@
-package org.xuxiaoxiao.order.dish;
+package org.xuxiaoxiao.order.ordereddishes;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,38 +9,36 @@ import android.widget.Toast;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.UniversalFragmentActivity;
 
+import java.util.ArrayList;
+
 /**
- * Created by WuQiang on 2017/4/26.
+ * Created by WuQiang on 2017/5/2.
  */
 
-public class DishActivity extends UniversalFragmentActivity {
-
-    private static final String RESTAURANT_NAME =
-            "org.xuxiaoxiao.android.dishintent.restaurantname";
-
-    private static final String MODEL_TAG = "model";
-    private DishModelFragment mFrag = null;
-    private String restaurantName;
-
+public class OrderedDishesActivity extends UniversalFragmentActivity {
+    private static final String ORDERED_DISHES = "org.xuxiaoxiao.ordereddishesactivity.oredred_dishes";
+    // 传送过来的点了的菜品，第一个元素是饭店的名字
+    private ArrayList<String> orderedDishesArrayList = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public static Intent newIntent(Context packageContext, String restaurantName) {
+    public static Intent newOredredDishesIntent(Context packageContext, ArrayList<String> orderedDishes) {
         // 可以在其它地方调用的，能够传递数据的 Intent
-        Intent intent = new Intent(packageContext, DishActivity.class);
-        intent.putExtra(RESTAURANT_NAME, restaurantName);
+        Intent intent = new Intent(packageContext, OrderedDishesActivity.class);
+        intent.putStringArrayListExtra(ORDERED_DISHES, orderedDishes);
+//        intent.putExtra(ORDERED_DISHES, orderedDishes);
         return intent;
     }
 
     @Override
     protected Fragment createFragment() {
         // 获得 Intent 的数据
-        restaurantName = getIntent()
-                .getStringExtra(RESTAURANT_NAME);
+        orderedDishesArrayList = getIntent()
+                .getStringArrayListExtra(ORDERED_DISHES);
         // 把数据传给自己 Hold 的 Fragment
-        return DishesFragment.newInstance(restaurantName);
+        return OrderedDishesFragment.newInstance(orderedDishesArrayList);
     }
 
     @Override
@@ -60,3 +58,4 @@ public class DishActivity extends UniversalFragmentActivity {
 
     }
 }
+// 传递数据： https://github.com/kimkevin/CachePot
