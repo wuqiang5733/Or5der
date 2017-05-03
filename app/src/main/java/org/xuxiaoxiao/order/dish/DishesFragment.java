@@ -113,8 +113,10 @@ public class DishesFragment extends Fragment {
         if (savedInstanceState != null){
             restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
         }
-        Log.d("WQWQ",getClass().getSimpleName());
-
+//        Log.d("WQWQ",getClass().getSimpleName());
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        integrator.setOrientationLocked(false);
+        integrator.initiateScan();
     }
 
     public void setModel(ArrayList<Dish> model) {
@@ -401,9 +403,9 @@ public class DishesFragment extends Fragment {
             if(result.getContents() == null) {
                 toast = "Cancelled from fragment";
             } else {
-                toast = "Scanned from fragment: " + result.getContents();
+                toast = "Scanned from fragme " + result.getContents();
             }
-
+// zxing-android-embedded : https://github.com/journeyapps/zxing-android-embedded
             // At this point we may or may not have a reference to the activity
             displayToast();
         }

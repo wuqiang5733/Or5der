@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.xuxiaoxiao.order">
     <!--允许联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -29,12 +30,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".dish.DishActivity"></activity>
-        <activity android:name=".main.NewRestaurantActivity"></activity>
-        <activity android:name=".dish.NewDishActivity"></activity>
-        <activity android:name=".addimage.MediaFolderActivity"></activity>
-        <activity android:name=".addimage.MediaItemActiviey"></activity>
-        <activity android:name=".ordereddishes.OrderedDishesActivity"></activity>
+        <activity android:name=".dish.DishActivity"
+            android:screenOrientation="fullSensor">
+        </activity>
+        <activity android:name=".main.NewRestaurantActivity"/>
+        <activity android:name=".dish.NewDishActivity"/>
+        <activity android:name=".addimage.MediaFolderActivity"/>
+        <activity android:name=".addimage.MediaItemActiviey"/>
+        <activity android:name=".ordereddishes.OrderedDishesActivity"/>
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
     </application>
 
 </manifest>
