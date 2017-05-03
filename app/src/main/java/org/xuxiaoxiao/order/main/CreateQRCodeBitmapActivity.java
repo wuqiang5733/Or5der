@@ -51,7 +51,7 @@ public class CreateQRCodeBitmapActivity extends AppCompatActivity {
         BitMatrix result = null;
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            result = multiFormatWriter.encode(str, BarcodeFormat.QR_CODE, 200, 200);
+            result = multiFormatWriter.encode(str, BarcodeFormat.QR_CODE, 300, 300);
             // 使用 ZXing Android Embedded 要写的代码
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             bitmap = barcodeEncoder.createBitmap(result);

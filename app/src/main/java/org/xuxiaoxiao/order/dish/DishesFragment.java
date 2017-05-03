@@ -403,7 +403,7 @@ public class DishesFragment extends Fragment {
             if(result.getContents() == null) {
                 toast = "Cancelled from fragment";
             } else {
-                toast = "Scanned from fragme " + result.getContents();
+                toast = "二维码代表：" + result.getContents();
             }
 // zxing-android-embedded : https://github.com/journeyapps/zxing-android-embedded
             // At this point we may or may not have a reference to the activity
