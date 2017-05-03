@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/ordered_dishes_recycler_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-
-</android.support.v7.widget.RecyclerView>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="?android:attr/progressBarStyle"
-        android:layout_marginTop="100dp"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        >
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ordered_dishes_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignBottom="@+id/ordered_dishes_recycler_view"
-        >
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button"
@@ -34,23 +40,16 @@
             android:layout_weight="1"
             android:text="确认定单" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="或" />
-
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="取消" />
+            android:text="取消定单" />
     </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>
 
     <!--android:layout_below 在某元素的下方-->
     <!--android:layout_above 在某元素的的上方-->
