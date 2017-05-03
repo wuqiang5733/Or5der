@@ -114,15 +114,17 @@ public class OrderedDishesFragment extends Fragment {
                             asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
                             Log.d("WQWQ", "生成每一条查询结果的长度：" + asyncOrderDishes.size());
                             try {
-                                Thread.sleep(2000);
+                                Thread.sleep(700);
                             } catch (InterruptedException e1) {
                                 e1.printStackTrace();
                             }
                             //调用publishProgress公布进度,最后onProgressUpdate方法将被执行
+                            // 我是是在应该更新进度条的时候，传送数据的，做一个判断，是为了只传送一次
                             if (asyncOrderDishes.size() == object.size()) {
-                                publishProgress(asyncOrderDishes);
+//                                publishProgress(asyncOrderDishes);
+                                myUnity.MyUpdateProgressBar(asyncOrderDishes);
+
                             }
-//                            myUnity.MyUpdateProgressBar((int) ((asyncOrderDishes.size() / (float) object.size()) * 100));
                         }
                     } else {
                         // Fail
@@ -130,39 +132,20 @@ public class OrderedDishesFragment extends Fragment {
                     }
                 }
             });
-            Log.d("WQWQ", "返回之前的长度：" + asyncOrderDishes.size());
+//            Log.d("WQWQ", "返回之前的长度：" + asyncOrderDishes.size());
             return null;
         }
 
         @Override
         protected void onProgressUpdate( ArrayList<Dish>... values) {
-//            int vlaue = values[0];
             Log.d("WQWQ", "更新进度条---更新进度条--更新进度条");
             progressBar.setVisibility(View.GONE);
             for (Dish dish : values[0]) {
                 Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
             }
-//            progressBar.setProgress(vlaue);
+
         }
 
-        //onProgressUpdate方法用于更新进度信息
-//        @Override
-//        protected void onProgressUpdate(Integer... progresses) {
-//            Log.i(TAG, "onProgressUpdate(Progress... progresses) called");
-//            progressBar.setProgress(progresses[0]);
-//            textView.setText("loading..." + progresses[0] + "%");
-//        }
-
-//        @Override
-//        protected void onPostExecute(ArrayList<Dish> dishes) {
-//            super.onPostExecute(dishes);
-//            orderDishes = dishes;
-//            for (Dish dish : dishes) {
-//                Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
-//            }
-//            Log.d("WQWQ", "onPostExecute后后后=+=+=+onPostExecute后后后=+=+=+onPostExecute后后后=+=+=+onPostExecute后后后=+=+=+");
-////            progressBar.setVisibility(View.GONE);
-//        }
     }
 
     private class OrderDishesAdapter extends RecyclerView.Adapter<OrderedDishesViewHolder> {
@@ -194,9 +177,11 @@ public class OrderedDishesFragment extends Fragment {
         public Unity() {
         }
 
-        public void MyUpdateProgressBar(int para) {
-            progressBar.setProgress(para);
-
+        public void MyUpdateProgressBar(ArrayList<Dish> values) {
+            progressBar.setVisibility(View.GONE);
+            for (Dish dish : values) {
+                Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
+            }
         }
     }
 }
