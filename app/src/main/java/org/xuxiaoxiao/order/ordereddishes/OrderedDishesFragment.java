@@ -118,7 +118,7 @@ public class OrderedDishesFragment extends Fragment {
                             if (isCancelled())
                                 break;
 
-//                            Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
+                            Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
                             asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
 //
                             //调用publishProgress公布进度,最后onProgressUpdate方法将被执行

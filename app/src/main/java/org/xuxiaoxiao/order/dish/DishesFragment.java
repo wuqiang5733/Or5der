@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +68,7 @@ public class DishesFragment extends Fragment {
     private int orderedDishshSum = 0;
     // 要传送的点了的菜品，第一个元素是饭店的名字
     private ArrayList<String> orderedDishesArrayList = new ArrayList<>();
+    private FloatingActionButton fab;
 
 
     @Override
@@ -137,6 +139,7 @@ public class DishesFragment extends Fragment {
 //        recyclerView.setLayoutManager(linearLayoutManager);
         orderedDishesDetail = (TextView)view.findViewById(R.id.ordered_dishes_detail_text_view);
         orderedDishesCheckButton = (Button)view.findViewById(R.id.ordered_dishes_check_button);
+        fab = (FloatingActionButton) view.findViewById(R.id.refresh);
         if (orderedDishshSum < 1){
             orderedDishesCheckButton.setEnabled(false);
         }else {
@@ -305,6 +308,7 @@ public class DishesFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.order_dish:
                 orderedDishBottomBarLinearLayout.setVisibility(isOrderMode ? View.GONE : View.VISIBLE);
+                fab.setVisibility(isOrderMode ? View.VISIBLE : View.GONE);
                 dishesAdapter.setShowBox();
                 dishesAdapter.initMap();
                 dishesAdapter.notifyDataSetChanged();
@@ -375,5 +379,6 @@ public class DishesFragment extends Fragment {
      其他三个回调方法都是在主线程中运行，
      因此，只要在AsyncTask中，就可以实现文件的后台下载、UI的更新操作。
      http://www.2cto.com/kf/201606/518662.html
+     Checkable Views : https://chris.banes.me/2013/03/22/checkable-views/
      */
 }
