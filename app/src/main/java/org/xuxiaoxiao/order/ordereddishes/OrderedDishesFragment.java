@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.model.Dish;
@@ -71,6 +74,8 @@ public class OrderedDishesFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.ordered_dishes_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
+        orderDishesAdapter = new OrderDishesAdapter();
+        recyclerView.setAdapter(orderDishesAdapter);
         return view;
     }
 
@@ -110,19 +115,19 @@ public class OrderedDishesFragment extends Fragment {
                     if (e == null) {
                         // Success
                         for (Dish dish : object) {
-                            Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
+//                            Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
                             asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
-                            Log.d("WQWQ", "生成每一条查询结果的长度：" + asyncOrderDishes.size());
+//                            Log.d("WQWQ", "生成每一条查询结果的长度：" + asyncOrderDishes.size());
                             try {
-                                Thread.sleep(700);
+                                Thread.sleep(400);
                             } catch (InterruptedException e1) {
                                 e1.printStackTrace();
                             }
                             //调用publishProgress公布进度,最后onProgressUpdate方法将被执行
                             // 我是是在应该更新进度条的时候，传送数据的，做一个判断，是为了只传送一次
                             if (asyncOrderDishes.size() == object.size()) {
-//                                publishProgress(asyncOrderDishes);
-                                myUtility.receiveDataFromAsynck(asyncOrderDishes);
+                                publishProgress(asyncOrderDishes);
+//                                myUtility.receiveDataFromAsynck(asyncOrderDishes);
 
                             }
                         }
@@ -143,7 +148,9 @@ public class OrderedDishesFragment extends Fragment {
             for (Dish dish : values[0]) {
                 Log.d("WQWQ", "下载完成了：" + dish.getDiscription());
             }
-
+            // 把下载完成的数据传给全局变量，并通知 Adapter
+            orderDishes = values[0];
+            orderDishesAdapter.notifyDataSetChanged();
         }
 
     }
@@ -152,24 +159,40 @@ public class OrderedDishesFragment extends Fragment {
 
         @Override
         public OrderedDishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+            View view = getActivity().getLayoutInflater().inflate(R.layout.ordered_dishes_item,parent,false);
+            return new OrderedDishesViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(OrderedDishesViewHolder holder, int position) {
+            holder.bind(orderDishes.get(position));
 
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return orderDishes.size();
         }
     }
 
     private class OrderedDishesViewHolder extends RecyclerView.ViewHolder {
+        ImageView oredredDishesImageView;
+        Dish dish;
 
         public OrderedDishesViewHolder(View itemView) {
             super(itemView);
+            oredredDishesImageView = (ImageView)itemView.findViewById(R.id.ordered_dishes_image_view);
+        }
+
+        public void bind(Dish dish) {
+            this.dish = dish;
+            Glide
+                    .with(getActivity())
+                    .load(dish.getPhotoUrl().getFileUrl())
+                    .centerCrop()
+//                    .placeholder(R.drawable.error)
+                    .crossFade()
+                    .into(oredredDishesImageView);
         }
     }
 
