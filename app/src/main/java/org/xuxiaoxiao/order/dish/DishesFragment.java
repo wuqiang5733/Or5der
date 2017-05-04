@@ -28,6 +28,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.login.LoginActivity;
 import org.xuxiaoxiao.order.model.Dish;
 import org.xuxiaoxiao.order.ordereddishes.OrderedDishesActivity;
 
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -104,6 +106,17 @@ public class DishesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
+        BmobUser bmobUser = BmobUser.getCurrentUser();
+        if(bmobUser != null){
+            // 允许用户使用应用
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+        }
+
         restaurantName = getArguments().getString(RESTAURANT_NAME);
         // 要传送的点了的菜品，第一个元素是饭店的名字
         orderedDishesArrayList.add(restaurantName);

@@ -24,6 +24,7 @@ import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
 import org.xuxiaoxiao.order.infrastructure.RecyclerViewClickListener2;
+import org.xuxiaoxiao.order.login.LoginActivity;
 import org.xuxiaoxiao.order.model.Restaurant;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
@@ -53,6 +55,15 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BmobUser bmobUser = BmobUser.getCurrentUser();
+        if(bmobUser != null){
+            // 允许用户使用应用
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+        }
 //        BmobUser user = new BmobUser();
         // 当 Activity 从操作系统接收到它的 onCreateOptionsMenu 回调函数时
         // FragmentManager 负责调用 Fragment.onCreateOptionsMenu
