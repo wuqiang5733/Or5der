@@ -1,5 +1,6 @@
 package org.xuxiaoxiao.order.main;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,9 @@ import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.login.LoginActivity;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by WuQiang on 2017/5/3.
@@ -30,6 +34,15 @@ public class CreateQRCodeBitmapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i("WQWQ", "onCreate");
+
+        BmobUser bmobUser = BmobUser.getCurrentUser();
+        if(bmobUser != null){
+            // 允许用户使用应用
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         setContentView(R.layout.activity_qrcode_bitmap);
         Log.i("WQWQ", "onCreate");
