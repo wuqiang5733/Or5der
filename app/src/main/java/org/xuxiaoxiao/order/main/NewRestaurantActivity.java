@@ -1,5 +1,6 @@
 package org.xuxiaoxiao.order.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,8 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.xuxiaoxiao.order.R;
+import org.xuxiaoxiao.order.login.LoginActivity;
 import org.xuxiaoxiao.order.model.Restaurant;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
@@ -25,6 +28,15 @@ public class NewRestaurantActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_new_restaurant);
         Log.i("WQWQ", "onCreate");
+
+        BmobUser bmobUser = BmobUser.getCurrentUser();
+        if(bmobUser != null){
+            // 允许用户使用应用
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         EditText restaurantName = (EditText) findViewById(R.id.restaurant_name_edit_text);
         EditText restaurantRate = (EditText) findViewById(R.id.restaurant_rate_edit_text);

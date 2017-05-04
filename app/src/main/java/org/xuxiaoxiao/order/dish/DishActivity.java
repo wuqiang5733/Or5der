@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.UniversalFragmentActivity;
+import org.xuxiaoxiao.order.login.LoginActivity;
+
+import cn.bmob.v3.BmobUser;
 
 /**
  * Created by WuQiang on 2017/4/26.
@@ -25,6 +28,15 @@ public class DishActivity extends UniversalFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BmobUser bmobUser = BmobUser.getCurrentUser();
+        if(bmobUser != null){
+            // 允许用户使用应用
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
     }
 
     public static Intent newIntent(Context packageContext, String restaurantName) {

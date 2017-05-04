@@ -53,6 +53,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        BmobUser user = new BmobUser();
         // 当 Activity 从操作系统接收到它的 onCreateOptionsMenu 回调函数时
         // FragmentManager 负责调用 Fragment.onCreateOptionsMenu
         // 所以要显式的告诉 FragmentManager ，Fragment 也应该接收到一个回调函数

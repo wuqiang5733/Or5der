@@ -50,3 +50,13 @@
     <!--android:indeterminateOnly="true" />-->
 
 <!--</FrameLayout>-->
+<!--好漂亮的登陆界面:https://sourcey.com/beautiful-android-login-and-signup-screens-with-material-design/-->
+<!--各种实用漂亮的元素： https://github.com/wasabeef/awesome-android-ui-->
+    <!--material-icon-lib ： https://github.com/code-mc/material-icon-lib-->
+<!--超级大全： https://github.com/wasabeef/awesome-android-ui-->
+<!--这就是我想要的RecyclerView ： http://www.androidhive.info/2016/05/android-working-with-card-view-and-recycler-view/-->
+    <!--https://www.sitepoint.com/mastering-complex-lists-with-the-android-recyclerview/-->
+    <!--Selecting Items of a RecyclerView using StateListDrawables  http://www.grokkingandroid.com/statelistdrawables-for-recyclerview-selection/-->
+    <!--The adapter not only stores information about the state of each item,-->
+    <!--but it also creates the views for each items.-->
+    <!--That’s why I use the adapter for setting the activated state.-->

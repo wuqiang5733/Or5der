@@ -17,12 +17,14 @@ import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.addimage.MediaFolderActivity;
+import org.xuxiaoxiao.order.login.LoginActivity;
 import org.xuxiaoxiao.order.model.Dish;
 
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
@@ -90,6 +92,16 @@ public class NewDishActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BmobUser bmobUser = BmobUser.getCurrentUser();
+        if(bmobUser != null){
+            // 允许用户使用应用
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
 //        Log.i("WQWQ", "onCreate");
         restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
 //        imagePath = getIntent().getStringExtra(IMAGE_PATH);
