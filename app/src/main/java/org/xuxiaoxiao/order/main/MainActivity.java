@@ -18,8 +18,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MainActivity extends UniversalFragmentActivity {
 
-    private static final String MODEL_TAG = "model";
-    private RestaurantModelFragment mFrag = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

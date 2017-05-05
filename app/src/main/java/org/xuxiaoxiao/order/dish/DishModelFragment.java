@@ -84,7 +84,7 @@ public class DishModelFragment extends android.support.v4.app.Fragment {
                         // Success
                         for (Dish dish : object) {
                             if (!isInterrupted()) {
-//                                Log.d("WQWQ",restaurant.getName());
+//                                Log.d("WQWQ",restaurant_item.getName());
                                 model.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(),dish.getRestaurantName()));
                                 EventBus.getDefault().post(new DishReadyEvent(dish));
                             }

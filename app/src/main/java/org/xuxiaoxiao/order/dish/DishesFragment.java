@@ -384,7 +384,7 @@ public class DishesFragment extends Fragment {
                 if (e == null) {
                     // Success
                     for (Dish dish : object) {
-//                                Log.d("WQWQ",restaurant.getName());
+//                                Log.d("WQWQ",restaurant_item.getName());
                         dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
 //                            EventBus.getDefault().post(new DishReadyEvent(dish));
                         dishesAdapter.notifyDataSetChanged();

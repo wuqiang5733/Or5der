@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#66ff0000"
+    android:padding="5dp"
+    android:layout_gravity="center"
+    >
+
+    <ImageView
+        android:id="@+id/restaurant_image_view"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_alignParentLeft="true"
+        />
+
+    <TextView
+        android:id="@+id/restaurant_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+
+        android:padding="10dp"
+        android:textColor="#ff0000"
+        android:background="#4f92c9"
+        android:layout_toRightOf="@+id/restaurant_image_view"
+        android:text="饭店的名字"
+        />
+
+    <TextView
+        android:id="@+id/restaurant_address_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:textSize="16sp"
+
+        android:padding="10dp"
+        android:textColor="#3657d7"
+        android:background="#a9a667"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/restaurant_name_text_view"/>
+
+    <TextView
+        android:id="@+id/restaurant_rate_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:textSize="16sp"
+
+        android:padding="10dp"
+        android:textColor="#3657d7"
+        android:background="#a9a667"
+        android:layout_alignBottom="@+id/restaurant_image_view"
+        android:layout_alignLeft="@+id/restaurant_name_text_view"
+      />
+
+</RelativeLayout>
+
+
+    <!--android:layout_alignParentLeft 贴紧父元素的左边缘-->
+    <!--android:layout_toRightOf 将该控件的左边缘和给定ID的控件的右边缘对齐-->
+    <!--android:layout_below 将该控件的顶部至于给定ID的控件之下-->
+    <!--android:layout_alignLeft 将该控件的左边缘与给定ID控件的左边缘对齐-->
+    <!--android:layout_alignParentBottom 贴紧父元素的下边缘-->
+    <!--android:layout_alignBottom 本元素的下边缘和某元素的的下边缘对齐-->
+
+
+    <!--http://blog.csdn.net/nieweiking/article/details/38417317-->
+<!--对于居中的解释-->
+    <!--http://blog.csdn.net/mvpstevenlin/article/details/51445295-->
+
+    <!--android:layout_below="@+id/restaurant_name_text_view"-->

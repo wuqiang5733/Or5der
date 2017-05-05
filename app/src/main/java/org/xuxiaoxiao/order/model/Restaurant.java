@@ -1,6 +1,7 @@
 package org.xuxiaoxiao.order.model;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by WuQiang on 2017/4/25.
@@ -9,11 +10,8 @@ import cn.bmob.v3.BmobObject;
 public class Restaurant extends BmobObject {
     private String name;
     private Integer rate;
-
-    public Restaurant(String name,int rate){
-        this.name = name;
-        this.rate = rate;
-    }
+    private BmobFile photoUrl;
+    private String address;
 
     public String getName() {
         return name;
@@ -31,5 +29,19 @@ public class Restaurant extends BmobObject {
         this.rate = rate;
     }
 
+    public BmobFile getPhotoUrl() {
+        return photoUrl;
+    }
 
+    public void setPhotoUrl(BmobFile photoUrl) {
+        this.photoUrl = photoUrl;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }

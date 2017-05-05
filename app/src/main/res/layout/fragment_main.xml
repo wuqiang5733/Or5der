@@ -38,6 +38,14 @@
         android:layout_alignParentRight="true"
         android:visibility="gone"/>
 
+    <ProgressBar
+        android:id="@+id/main_fragment_progres_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
 </RelativeLayout>
 
 <!--<?xml version="1.0" encoding="utf-8"?>-->

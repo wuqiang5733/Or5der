@@ -1,7 +1,5 @@
 package org.xuxiaoxiao.order.main;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -19,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -39,7 +38,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 
-import static org.xuxiaoxiao.order.R.layout.restaurant;
+import static org.xuxiaoxiao.order.R.layout.restaurant_item;
 
 /**
  * Created by WuQiang on 2017/4/25.
@@ -49,6 +48,7 @@ public class MainFragment extends Fragment {
     RecyclerView restaurantRecyclerView;
     LinearLayoutManager linearLayoutManager;
     RestaurantAdapter restaurantAdapter;
+    ProgressBar progressBar;
 //    ProgressBar mainPrograssBar;
 
     private List<Restaurant> restaurants =
@@ -60,9 +60,9 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         BmobUser bmobUser = BmobUser.getCurrentUser();
-        if(bmobUser != null){
+        if (bmobUser != null) {
             // 允许用户使用应用
-        }else{
+        } else {
             //缓存用户对象为空时， 可打开用户注册界面…
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
@@ -73,9 +73,6 @@ public class MainFragment extends Fragment {
         // 所以要显式的告诉 FragmentManager ，Fragment 也应该接收到一个回调函数
         setHasOptionsMenu(true);
 //        new LoadWordsThread().start();
-        restaurantAdapter = new RestaurantAdapter();
-
-        new RestaurantAsyncTask(getActivity()).execute();
 
 
     }
@@ -93,7 +90,10 @@ public class MainFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getActivity());
 //        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL); // 设置线性布局为横向（默认为纵向）
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
+        restaurantAdapter = new RestaurantAdapter();
         restaurantRecyclerView.setAdapter(restaurantAdapter);
+        progressBar = (ProgressBar)view.findViewById(R.id.main_fragment_progres_bar);
+        new RestaurantAsyncTask(progressBar).execute();
 //        _avatarProgressFrame = view.findViewById(R.id.activity_profile_avatarProgressFrame); // 头像上转的那个圈
 //        _avatarProgressFrame.setVisibility(View.VISIBLE);
 
@@ -147,7 +147,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public RestaurantViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getActivity().getLayoutInflater().inflate(restaurant, parent, false);
+            View view = getActivity().getLayoutInflater().inflate(restaurant_item, parent, false);
             return new RestaurantViewHolder(view);
         }
 
@@ -166,7 +166,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    private class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnLongClickListener{
+    private class RestaurantViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private View root;
         Restaurant restaurant;
         TextView restaurantName;
@@ -186,20 +186,22 @@ public class MainFragment extends Fragment {
         public void onClick(View v) {
             // 在Fragment 当中启动 一个putExtra的Intent
 //            EventBus.getDefault().post
-//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant.getName()));
-//            Intent intent = DishActivity.newIntent(getActivity(), restaurant.getName());
+//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant_item.getName()));
+//            Intent intent = DishActivity.newIntent(getActivity(), restaurant_item.getName());
 //            startActivity(intent);
 //            int temp =(int) v.getTag();
 //            Log.d("WQWQ","你单击了第" + temp + "个元素");
 
         }
+
         @Override
         public boolean onLongClick(View v) {
-            int temp =(int) v.getTag();
-            Log.d("WQWQ","你*长按*了第" + temp + "个元素");
+            int temp = (int) v.getTag();
+            Log.d("WQWQ", "你*长按*了第" + temp + "个元素");
             // 返回 true 的时候，不会在长按事件之后 产生 点击事件
             return true;
         }
+
         public void bind(Restaurant restaurant) {
             this.restaurant = restaurant;
             restaurantName.setText(restaurant.getName());
@@ -231,104 +233,57 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public class RestaurantAsyncTask extends AsyncTask<Void, Integer, Void> {
-        ProgressDialog pdialog;
-        public RestaurantAsyncTask(Context context) {
-//            pdialog = new ProgressDialog(context, 0);
-//            pdialog.setButton("取消", new DialogInterface.OnClickListener() {
-//                public void onClick(DialogInterface dialog, int i) {
-//                    dialog.cancel();
-//                }
-//            });
-//            pdialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-//                public void onCancel(DialogInterface dialog) {
-//                    getActivity().finish();
-//                }
-//            });
-//            pdialog.setCancelable(true);
-//            pdialog.setMax(100);
-//            pdialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//            pdialog.show();
-//            ProgressBar progressBar = new ProgressBar(context);
-//            progressBar
+    public class RestaurantAsyncTask extends AsyncTask<Void, ArrayList<Restaurant>, Void> {
+        ProgressBar innerProgressBar;
+
+        public RestaurantAsyncTask(ProgressBar innerProgressBar) {
+            this.innerProgressBar = innerProgressBar;
         }
 
         @Override
         protected void onPreExecute() {
-            // 任务启动，可以在这里显示一个对话框，这里简单处理
-//            message.setText(R.string.task_started);
+            innerProgressBar.setVisibility(View.VISIBLE);
         }
+
         @Override
         protected Void doInBackground(Void... params) {
-//            fetchRestaurantData();
 
-            //        final ArrayList<Restaurant> restaurants = new ArrayList<>();
-            // Fetch data from website
+            final ArrayList<Restaurant> innerRestaurants = new ArrayList<>();
+
             BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
             query.setLimit(10);
             query.findObjects(new FindListener<Restaurant>() {
                 @Override
                 public void done(List<Restaurant> object, BmobException e) {
-//                    int temp = 0;
                     if (e == null) {
                         // Success
                         for (Restaurant restaurant : object) {
-                            Log.d("WQWQ", restaurant.getName());
-                            restaurants.add(new Restaurant(restaurant.getName(), restaurant.getRate()));
-//                                EventBus.getDefault().post(new RestaurantReadyEvent(restaurant));
-                            restaurantAdapter.notifyDataSetChanged();
-//                            publishProgress(temp += 20);
-//                            Thread.sleep(100);
+                            innerRestaurants.add(restaurant);
                         }
                     } else {
                         // Fail
                         Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
                     }
-//                    pdialog.dismiss();
-
+                    if (object.size() == innerRestaurants.size()) {
+                        onProgressUpdate(innerRestaurants);
+                    }
                 }
             });
 
             return null;
         }
+
         @Override
-        protected void onProgressUpdate(Integer... values) {
-            // 更新进度
-//            System.out.println(""+values[0]);
-//            message.setText(""+values[0]);
-//            pdialog.setProgress(values[0]);
-        }
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-//            _avatarProgressFrame.setVisibility(View.GONE);
-//            mainPrograssBar.setVisibility(View.GONE);
+        protected void onProgressUpdate(ArrayList<Restaurant>... values) {
+            super.onProgressUpdate(values);
+            restaurants = values[0];
+            restaurantAdapter.notifyDataSetChanged();
+            innerProgressBar.setVisibility(View.GONE);
         }
     }
 
     private void fetchRestaurantData() {
-//        final ArrayList<Restaurant> restaurants = new ArrayList<>();
-        // Fetch data from website
-        BmobQuery<Restaurant> query = new BmobQuery<Restaurant>();
-        query.setLimit(10);
-        query.findObjects(new FindListener<Restaurant>() {
-            @Override
-            public void done(List<Restaurant> object, BmobException e) {
-                if (e == null) {
-                    // Success
-                    for (Restaurant restaurant : object) {
-                        Log.d("WQWQ", restaurant.getName());
-                        restaurants.add(new Restaurant(restaurant.getName(), restaurant.getRate()));
-//                                EventBus.getDefault().post(new RestaurantReadyEvent(restaurant));
-                        restaurantAdapter.notifyDataSetChanged();
-                    }
-                } else {
-                    // Fail
-                    Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                }
 
-            }
-        });
     }
 }
 // http://blog.csdn.net/liuhe688/article/details/6532519

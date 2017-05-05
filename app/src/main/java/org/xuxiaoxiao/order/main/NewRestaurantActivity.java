@@ -48,7 +48,9 @@ public class NewRestaurantActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        Restaurant newRestaurant = new Restaurant("新饭店", 5);
+                        Restaurant newRestaurant = new Restaurant();
+                        newRestaurant.setName("新饭店");
+                        newRestaurant.setRate(5);
 //注意：不能调用gameScore.setObjectId("")方法
 //                        gameScore.setName("比目");
 //                        gameScore.setRate(89);
