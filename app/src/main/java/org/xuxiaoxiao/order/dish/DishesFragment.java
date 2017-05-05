@@ -225,6 +225,11 @@ public class DishesFragment extends Fragment {
 //            });
 
 //            holder.orderDishCheckBox.setChecked(map.get(position));
+            if (isOrderMode){
+                // 如果没有一个判断，会出现： Attempt to read from null array 异常
+                holder.orderDishCheckBox.setChecked(checkArray[position]);
+
+            }
         }
 
         @Override
