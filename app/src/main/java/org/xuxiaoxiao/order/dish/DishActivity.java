@@ -18,14 +18,9 @@ import cn.bmob.v3.BmobUser;
 
 public class DishActivity extends UniversalFragmentActivity {
 
-    private static final String RESTAURANT_NAME =
-            "org.xuxiaoxiao.android.dishintent.restaurantname";
-
-    private static final String MODEL_TAG = "model";
-    private static final String RESTAURANT_PHOTO_URL = "org.xuxiaoxiao.order.dish.DishActivity.restaurant_phpoto_rul";
+    private static final String RESTAURANT_NAME_AND_PHPTO_URL = "org.xuxiaoxiao.order.dish.DishActivity.restaurant_name_and_phpto_url";
     private DishModelFragment mFrag = null;
-    private String restaurantName;
-    private String restaurantPhotoUrl;
+    private String[] nameAndUrl;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,23 +36,19 @@ public class DishActivity extends UniversalFragmentActivity {
         }
     }
 
-    public static Intent newIntent(Context packageContext, String restaurantName,String restaurantPhotoUrl) {
+    public static Intent newIntent(Context packageContext, String[] strArray) {
         // 可以在其它地方调用的，能够传递数据的 Intent
         Intent intent = new Intent(packageContext, DishActivity.class);
-        intent.putExtra(RESTAURANT_NAME, restaurantName);
-        intent.putExtra(RESTAURANT_PHOTO_URL, restaurantPhotoUrl);
+        intent.putExtra(RESTAURANT_NAME_AND_PHPTO_URL,strArray);
         return intent;
     }
 
     @Override
     protected Fragment createFragment() {
         // 获得 Intent 的数据
-        restaurantName = getIntent()
-                .getStringExtra(RESTAURANT_NAME);
-        restaurantPhotoUrl = getIntent()
-                .getStringExtra(RESTAURANT_NAME);
+        nameAndUrl = getIntent().getStringArrayExtra(RESTAURANT_NAME_AND_PHPTO_URL);
         // 把数据传给自己 Hold 的 Fragment
-        return DishesFragment.newInstance(restaurantName,restaurantPhotoUrl);
+        return DishesFragment.newInstance(nameAndUrl);
     }
 
     @Override

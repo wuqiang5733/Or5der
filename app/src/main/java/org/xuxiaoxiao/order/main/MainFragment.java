@@ -55,8 +55,9 @@ public class MainFragment extends Fragment {
 
     private List<Restaurant> restaurants =
             Collections.synchronizedList(new ArrayList<Restaurant>());
-    private View _avatarProgressFrame; // 头像上转的那个圈
-
+//    private View _avatarProgressFrame; // 头像上转的那个圈
+    // 用一个数组把 饭店图片跟饭店名字传送给 DishesFragment;
+String [] strArray = new String [2];
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +107,10 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
 //                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName(),restaurants.get(position).getPhoto().getFileUrl());
+                        strArray[0] = restaurants.get(position).getName();
+                        strArray[1] = restaurants.get(position).getPhoto().getFileUrl();
+
+                        Intent intent = DishActivity.newIntent(getActivity(),strArray);
                         startActivity(intent);
                     }
 
@@ -116,7 +120,7 @@ public class MainFragment extends Fragment {
                     }
                 }));
         try {
-            Glide.with(this).load(R.drawable.cover).into((ImageView) view.findViewById(R.id.backdrop));
+            Glide.with(getActivity()).load(R.drawable.cover).into((ImageView) view.findViewById(R.id.backdrop));
         } catch (Exception e) {
             e.printStackTrace();
         }

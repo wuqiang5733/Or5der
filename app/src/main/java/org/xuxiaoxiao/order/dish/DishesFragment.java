@@ -49,8 +49,9 @@ import cn.bmob.v3.listener.FindListener;
 
 public class DishesFragment extends Fragment {
 
-    private static final String STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT = "org.xuxiaoxiao.order.dishesfragment.state_restaurant_name";
-    private static final String RESTAURANT_PHOTO_RUL = "org.xuxiaoxiao.order.dish.DishesFragment.restaurant_phpto_url";
+//    private static final String STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT = "org.xuxiaoxiao.order.dishesfragment.state_restaurant_name";
+//    private static final String RESTAURANT_PHOTO_RUL = "org.xuxiaoxiao.order.dish.DishesFragment.restaurant_phpto_url";
+    private static final String RESTAURANT_NAME_AND_URL = "org.xuxiaoxiao.order.dish.DishesFragment.restaurant_name_url";
     LinearLayout orderedDishBottomBarLinearLayout;
     TextView orderedDishesDetail;
     Button orderedDishesCheckButton;
@@ -79,6 +80,8 @@ public class DishesFragment extends Fragment {
     // 扫描二维码用的一个变量
     private String toast;
 
+    private String[] nameAndUrl;
+
 
     @Override
     public void onResume() {
@@ -89,7 +92,7 @@ public class DishesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
-        savedInstanceState.putString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT, restaurantName);
+//        savedInstanceState.putString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT, restaurantName);
 //        savedInstanceState.putInt(STATE_LEVEL, mCurrentLevel);
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -118,16 +121,16 @@ public class DishesFragment extends Fragment {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
         }
+        nameAndUrl = getArguments().getStringArray(RESTAURANT_NAME_AND_URL);
 
-        restaurantName = getArguments().getString(RESTAURANT_NAME);
-        restaurantPhotoUrl = getArguments().getString(RESTAURANT_PHOTO_RUL);
+        Log.d("WQWQ----",nameAndUrl[1]);
         // 要传送的点了的菜品，第一个元素是饭店的名字
-        orderedDishesArrayList.add(restaurantName);
+        orderedDishesArrayList.add(nameAndUrl[0]);
         dishesAdapter = new DishesAdapter();
 
         new RestaurantAsyncTask().execute();
         if (savedInstanceState != null){
-            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
+//            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
         }
 //        Log.d("WQWQ",getClass().getSimpleName());
         IntentIntegrator integrator = new IntentIntegrator(getActivity());
@@ -139,11 +142,12 @@ public class DishesFragment extends Fragment {
         this.dishes = model;
     }
 
-    public static DishesFragment newInstance(String restaurantName,String restaurantPhotoUrl) {
+    public static DishesFragment newInstance(String[] nameAndUrl) {
         // 这个方法接收来自 Activity 的数据
         Bundle args = new Bundle();
-        args.putString(RESTAURANT_NAME, restaurantName);
-        args.putString(RESTAURANT_PHOTO_RUL, restaurantPhotoUrl);
+//        args.putString(RESTAURANT_NAME, restaurantName);
+//        args.putString(RESTAURANT_PHOTO_RUL, restaurantPhotoUrl);
+        args.putStringArray(RESTAURANT_NAME_AND_URL,nameAndUrl);
 
         DishesFragment fragment = new DishesFragment();
         fragment.setArguments(args);
@@ -203,6 +207,13 @@ public class DishesFragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 //        dishesAdapter = new DishesAdapter();
         recyclerView.setAdapter(dishesAdapter);
+
+        try {
+            Glide.with(getActivity()).load(nameAndUrl[1]).into((ImageView) view.findViewById(R.id.backdrop));
+//            Glide.with(getActivity()).load(restaurantPhotoUrl).into((ImageView) view.findViewById(R.id.backdrop));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
