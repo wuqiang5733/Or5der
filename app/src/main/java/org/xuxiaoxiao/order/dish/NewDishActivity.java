@@ -112,7 +112,7 @@ public class NewDishActivity extends AppCompatActivity {
 //        Log.i("WQWQ", "onCreate");
 //        restaurantName = getIntent().getStringExtra(RESTAURANT_NAME);
 
-        container = (CoordinatorLayout) findViewById(R.id.container);
+        container = (CoordinatorLayout) findViewById(R.id.main_fragment_container);
         final EditText dishName = (EditText) findViewById(R.id.dish_name_edit_text);
 //        dishName.setText(restaurantName);
         dishPrice = (EditText) findViewById(R.id.dish_price_edit_text);

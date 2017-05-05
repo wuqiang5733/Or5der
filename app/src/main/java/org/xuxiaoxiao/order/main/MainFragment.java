@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,9 +57,11 @@ public class MainFragment extends Fragment {
 
     private List<Restaurant> restaurants =
             Collections.synchronizedList(new ArrayList<Restaurant>());
-//    private View _avatarProgressFrame; // 头像上转的那个圈
+    //    private View _avatarProgressFrame; // 头像上转的那个圈
     // 用一个数组把 饭店图片跟饭店名字传送给 DishesFragment;
-String [] strArray = new String [2];
+    String[] strArray = new String[2];
+    CoordinatorLayout mainFragmentContainer;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,7 @@ String [] strArray = new String [2];
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_container, container, false);
+        mainFragmentContainer = (CoordinatorLayout)view.findViewById(R.id.main_fragment_container);
         restaurantRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_restaurant);
         restaurantRecyclerView.setHasFixedSize(true);
         Drawable divider = getResources().getDrawable(R.drawable.item_divider);
@@ -95,11 +100,11 @@ String [] strArray = new String [2];
         restaurantRecyclerView.setLayoutManager(linearLayoutManager);
         restaurantAdapter = new RestaurantAdapter();
         restaurantRecyclerView.setAdapter(restaurantAdapter);
-        progressBar = (ProgressBar)view.findViewById(R.id.main_fragment_progres_bar);
-        if (NetWorkUtils.isNetworkConnected(getActivity())){
+        progressBar = (ProgressBar) view.findViewById(R.id.main_fragment_progres_bar);
+        if (NetWorkUtils.isNetworkConnected(getActivity())) {
             new RestaurantAsyncTask(progressBar).execute();
-        }else {
-            Toast.makeText(getActivity(),"请先检查网络联接",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getActivity(), "请先检查网络联接", Toast.LENGTH_LONG).show();
         }
 
         restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
@@ -110,7 +115,7 @@ String [] strArray = new String [2];
                         strArray[0] = restaurants.get(position).getName();
                         strArray[1] = restaurants.get(position).getPhoto().getFileUrl();
 
-                        Intent intent = DishActivity.newIntent(getActivity(),strArray);
+                        Intent intent = DishActivity.newIntent(getActivity(), strArray);
                         startActivity(intent);
                     }
 
@@ -144,8 +149,6 @@ String [] strArray = new String [2];
 
         @Override
         public void onBindViewHolder(RestaurantViewHolder holder, int position) {
-//            holder.restaurantName.setText(restaurants.get(position).getName());
-//            holder.restaurantRate.setText(String.valueOf(restaurants.get(position).getRate()));
             holder.root.setTag(position);
             holder.bind(restaurants.get(position));
 
@@ -171,28 +174,21 @@ String [] strArray = new String [2];
             this.root = itemView;
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name_text_view);
             restaurantRate = (TextView) itemView.findViewById(R.id.restaurant_rate_text_view);
-            restaurantAddress = (TextView)itemView.findViewById(R.id.restaurant_address_text_view);
-            restaurantImage = (ImageView)itemView.findViewById(R.id.restaurant_image_view);
+            restaurantAddress = (TextView) itemView.findViewById(R.id.restaurant_address_text_view);
+            restaurantImage = (ImageView) itemView.findViewById(R.id.restaurant_image_view);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            // 在Fragment 当中启动 一个putExtra的Intent
-//            EventBus.getDefault().post
-//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurant_item.getName()));
-//            Intent intent = DishActivity.newIntent(getActivity(), restaurant_item.getName());
-//            startActivity(intent);
-//            int temp =(int) v.getTag();
-//            Log.d("WQWQ","你单击了第" + temp + "个元素");
 
         }
 
         @Override
         public boolean onLongClick(View v) {
             int temp = (int) v.getTag();
-            Log.d("WQWQ", "你*长按*了第" + temp + "个元素");
+//            Log.d("WQWQ", "你*长按*了第" + temp + "个元素");
             // 返回 true 的时候，不会在长按事件之后 产生 点击事件
             return true;
         }
@@ -266,12 +262,13 @@ String [] strArray = new String [2];
                     } else {
                         // Fail
                         Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                        Snackbar.make(mainFragmentContainer, "查询出错了，请检查网络联接", Snackbar.LENGTH_LONG).show();
                     }
-                    if (object == null){
-                        Log.i("bmob", "出错了 。。查询");
-                        getActivity().finish();
-                    }
-                    if (object.size() == innerRestaurants.size()) {
+//                    if (object == null) {
+//                        Log.i("bmob", "出错了 。。查询");
+//                        getActivity().finish();
+//                    }
+                    if ((object != null)&&(object.size() == innerRestaurants.size())) {
                         onProgressUpdate(innerRestaurants);
                     }
                 }

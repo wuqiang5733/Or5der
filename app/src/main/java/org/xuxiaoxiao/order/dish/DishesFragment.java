@@ -20,6 +20,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +60,8 @@ public class DishesFragment extends Fragment {
     //    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
     //    ArrayList<Dish> dishes = new ArrayList<>();
-    String restaurantName;
-    String restaurantPhotoUrl;
+//    String restaurantName;
+//    String restaurantPhotoUrl;
     GridLayoutManager gridLayoutManager;
 
     private List<Dish> dishes =
@@ -79,15 +80,14 @@ public class DishesFragment extends Fragment {
     private FloatingActionButton fab;
     // 扫描二维码用的一个变量
     private String toast;
-
     private String[] nameAndUrl;
-
+    private ProgressBar progressBar;
 
     @Override
     public void onResume() {
         super.onResume();
         orderedDishesArrayList.clear();
-        orderedDishesArrayList.add(restaurantName);
+        orderedDishesArrayList.add(nameAndUrl[0]);
     }
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -123,30 +123,25 @@ public class DishesFragment extends Fragment {
         }
         nameAndUrl = getArguments().getStringArray(RESTAURANT_NAME_AND_URL);
 
-        Log.d("WQWQ----",nameAndUrl[1]);
+        Log.d("WQWQ----",nameAndUrl[0]);
         // 要传送的点了的菜品，第一个元素是饭店的名字
         orderedDishesArrayList.add(nameAndUrl[0]);
         dishesAdapter = new DishesAdapter();
 
-        new RestaurantAsyncTask().execute();
+//        new RestaurantAsyncTask().execute();
         if (savedInstanceState != null){
 //            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
         }
 //        Log.d("WQWQ",getClass().getSimpleName());
-        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-        integrator.setOrientationLocked(false);
-        integrator.initiateScan();
-    }
-
-    public void setModel(ArrayList<Dish> model) {
-        this.dishes = model;
+          // 加上下面的代码，进入 Fragment 就会自动启动扫描功能
+//        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+//        integrator.setOrientationLocked(false);
+//        integrator.initiateScan();
     }
 
     public static DishesFragment newInstance(String[] nameAndUrl) {
         // 这个方法接收来自 Activity 的数据
         Bundle args = new Bundle();
-//        args.putString(RESTAURANT_NAME, restaurantName);
-//        args.putString(RESTAURANT_PHOTO_RUL, restaurantPhotoUrl);
         args.putStringArray(RESTAURANT_NAME_AND_URL,nameAndUrl);
 
         DishesFragment fragment = new DishesFragment();
@@ -199,6 +194,7 @@ public class DishesFragment extends Fragment {
                 }
             }
         });
+        progressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 //        recyclerView.setHasFixedSize(true);
 
@@ -207,7 +203,7 @@ public class DishesFragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 //        dishesAdapter = new DishesAdapter();
         recyclerView.setAdapter(dishesAdapter);
-
+        fetchDishData();
         try {
             Glide.with(getActivity()).load(nameAndUrl[1]).into((ImageView) view.findViewById(R.id.backdrop));
 //            Glide.with(getActivity()).load(restaurantPhotoUrl).into((ImageView) view.findViewById(R.id.backdrop));
@@ -269,15 +265,12 @@ public class DishesFragment extends Fragment {
             }
             holder.orderDishCheckBox.setChecked(map.get(position));
             orderedDishshSum = 0;
-
         }
 
         @Override
         public int getItemCount() {
             return dishes.size();
         }
-
-
 
         //设置是否显示CheckBox
         public void setShowBox() {
@@ -360,7 +353,7 @@ public class DishesFragment extends Fragment {
 
                 return true;
             case R.id.new_dish:
-                Intent intent = NewDishActivity.newIntent(getActivity(), restaurantName);
+                Intent intent = NewDishActivity.newIntent(getActivity(), nameAndUrl[0]);
                 startActivity(intent);
                 return true;
 
@@ -388,10 +381,8 @@ public class DishesFragment extends Fragment {
         BmobQuery<Dish> query = new BmobQuery<Dish>();
         query.setLimit(10);
         // 获得来自 Activity 的数据
-        final String restaurantName = getArguments().getString(RESTAURANT_NAME);
-//            EventBus.getDefault().post(new SendRstaurantNameEvent(restaurantName));
-        query.addWhereEqualTo("restaurantName", restaurantName);
-//            Log.d("WQWQ",restaurantName);
+//        final String restaurantName = getArguments().getString(RESTAURANT_NAME);
+        query.addWhereEqualTo("restaurantName", nameAndUrl[0]);
 
         query.findObjects(new FindListener<Dish>() {
             @Override
@@ -399,11 +390,9 @@ public class DishesFragment extends Fragment {
                 if (e == null) {
                     // Success
                     for (Dish dish : object) {
-//                                Log.d("WQWQ",restaurant_item.getName());
                         dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
-//                            EventBus.getDefault().post(new DishReadyEvent(dish));
                         dishesAdapter.notifyDataSetChanged();
-
+                        progressBar.setVisibility(View.GONE);
                     }
                 } else {
                     // Fail
@@ -445,6 +434,10 @@ public class DishesFragment extends Fragment {
 
         displayToast();
     }
+
+//    private void fetchDishData() {
+//
+//    }
     /**
      * 因此，在需要更新进度值时，AsyncTask的基本生命周期过程为：
      * onPreExecute() --> doInBackground() --> publishProgress() -->onProgressUpdate()--> onPostExecute()。
