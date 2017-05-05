@@ -9,5 +9,6 @@
         android:id="@+id/ordered_dishes_image_view"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
+        android:scaleType="fitXY"
         />
 </LinearLayout>
