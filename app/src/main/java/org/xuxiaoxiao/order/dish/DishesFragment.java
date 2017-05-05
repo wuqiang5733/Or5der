@@ -206,6 +206,7 @@ public class DishesFragment extends Fragment {
         @Override
         public void onBindViewHolder(DishesViewHolder holder, final int position) {
             holder.bind(dishes.get(position));
+            holder.root.setTag(position);
             //
 //            if (isOrderMode) {
 //                holder.orderDishCheckBox.setVisibility(View.VISIBLE);
@@ -215,13 +216,13 @@ public class DishesFragment extends Fragment {
             holder.orderDishCheckBox.setVisibility(isOrderMode? View.VISIBLE:View.GONE);
 
             //设置checkBox改变监听
-            holder.orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                }
-            });
+//            holder.orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//
+//                }
+//            });
 
 //            holder.orderDishCheckBox.setChecked(map.get(position));
         }
@@ -234,6 +235,7 @@ public class DishesFragment extends Fragment {
     }
 
     private class DishesViewHolder extends RecyclerView.ViewHolder {
+        View root;
         TextView dishname;
         TextView dishprice;
         TextView dishdiscription;
@@ -244,8 +246,9 @@ public class DishesFragment extends Fragment {
         Dish dish;
 
 
-        public DishesViewHolder(View itemView) {
+        public DishesViewHolder(final View itemView) {
             super(itemView);
+            this.root = itemView;
             dishname = (TextView) itemView.findViewById(R.id.dish_name_text_view);
             dishprice = (TextView) itemView.findViewById(R.id.dish_price_text_view);
             dishdiscription = (TextView) itemView.findViewById(R.id.dish_discription_text_view);
@@ -254,7 +257,18 @@ public class DishesFragment extends Fragment {
             orderDishCheckBox = (CheckBox) itemView.findViewById(R.id.order_dish_menu);
 //            orderDishCheckBox.setVisibility(isOrderMode? View.VISIBLE:View.GONE);
 //            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
-
+            orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int i = (int)root.getTag();
+//                    CheckBox checkBox = (CheckBox)itemView.findViewById(i);
+                    checkArray[i] = isChecked;
+                    for (int j=0;j<dishes.size();j++){
+                        Log.d("WQWQ",j+1 + ": " + String.valueOf(checkArray[j]));
+                    }
+                    Log.d("WQWQ","=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
+                }
+            });
         }
 
         public void bind(Dish dish) {
@@ -327,7 +341,7 @@ public class DishesFragment extends Fragment {
     private void fetchDishData() {
         // Fetch data from website
         BmobQuery<Dish> query = new BmobQuery<Dish>();
-        query.setLimit(10);
+        query.setLimit(20);
         // 获得来自 Activity 的数据
 //        final String restaurantName = getArguments().getString(RESTAURANT_NAME);
         query.addWhereEqualTo("restaurantName", nameAndUrl[0]);
