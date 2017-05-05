@@ -59,16 +59,10 @@ public class DishesFragment extends Fragment {
     RecyclerView recyclerView;
     //    LinearLayoutManager linearLayoutManager;
     DishesAdapter dishesAdapter;
-    //    ArrayList<Dish> dishes = new ArrayList<>();
-//    String restaurantName;
-//    String restaurantPhotoUrl;
     GridLayoutManager gridLayoutManager;
 
     private List<Dish> dishes =
             Collections.synchronizedList(new ArrayList<Dish>());
-
-    private static final String RESTAURANT_NAME =
-            "org.xuxiaoxiao.restaurant_name";
     // 决定是否是在点菜模式下
     private boolean isOrderMode = false;
     // 存储勾选框状态的map集合
@@ -214,7 +208,6 @@ public class DishesFragment extends Fragment {
     }
 
     private class DishesAdapter extends RecyclerView.Adapter<DishesViewHolder> {
-//        ArrayList<Dish> dishes = new ArrayList<>();
 
         public DishesAdapter() {
 //            this.dishes = dishes;
@@ -314,15 +307,9 @@ public class DishesFragment extends Fragment {
             dishname.setText(dish.getName());
             dishprice.setText(String.valueOf(dish.getPrice()));
             dishdiscription.setText(dish.getDiscription());
-//            imageView.setPlaceholderImage(R.drawable.error);
-//            imageView.setImageUrl("http://bmob-cdn-10939.b0.upaiyun.com/2017/04/26/3230720540baa93e80edd3c101765d66.png");
-//            Picasso.with(getActivity()).load(dish.getPhotoUrl().getFileUrl())
-//                    .fit().centerCrop()
-////                    .placeholder(R.drawable.error)
-//                    .error(R.drawable.error).into(disImage);
             Glide
                     .with(getActivity())
-                    .load(dish.getPhotoUrl().getFileUrl())
+                    .load(dish.getPhoto().getUrl())
                     .centerCrop()
 //                    .placeholder(R.drawable.error)
                     .crossFade()
@@ -390,7 +377,9 @@ public class DishesFragment extends Fragment {
                 if (e == null) {
                     // Success
                     for (Dish dish : object) {
-                        dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
+                        Log.d("WQWQ",dish.getPhoto().getFileUrl());
+//                        dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
+                        dishes.add(dish);
                         dishesAdapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
                     }
@@ -435,9 +424,6 @@ public class DishesFragment extends Fragment {
         displayToast();
     }
 
-//    private void fetchDishData() {
-//
-//    }
     /**
      * 因此，在需要更新进度值时，AsyncTask的基本生命周期过程为：
      * onPreExecute() --> doInBackground() --> publishProgress() -->onProgressUpdate()--> onPostExecute()。

@@ -119,7 +119,8 @@ public class OrderedDishesFragment extends Fragment {
                                 break;
 
                             Log.d("WQWQ", "查询出来的结果object的长度" + object.size());
-                            asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
+//                            asyncOrderDishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
+                            asyncOrderDishes.add(dish);
 //
                             //调用publishProgress公布进度,最后onProgressUpdate方法将被执行
                             // 我是是在应该更新进度条的时候，传送数据的，做一个判断，是为了只传送一次
@@ -183,7 +184,7 @@ public class OrderedDishesFragment extends Fragment {
             this.dish = dish;
             Glide
                     .with(getActivity())
-                    .load(dish.getPhotoUrl().getFileUrl())
+                    .load(dish.getPhoto().getFileUrl())
                     .centerCrop()
 //                    .placeholder(R.drawable.error)
                     .crossFade()

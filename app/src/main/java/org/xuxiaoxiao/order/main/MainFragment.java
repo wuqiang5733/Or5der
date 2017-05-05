@@ -257,6 +257,7 @@ public class MainFragment extends Fragment {
                     if (e == null) {
                         // Success
                         for (Restaurant restaurant : object) {
+                            Log.d("WQWQ",restaurant.getPhoto().getUrl());
                             innerRestaurants.add(restaurant);
                         }
                     } else {

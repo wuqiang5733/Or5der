@@ -14,15 +14,6 @@ public class Dish extends BmobObject {
     private BmobFile photoUrl;
     private String restaurantName;
 
-
-    public Dish(String name, Integer price, String discription, BmobFile photoUrl, String restaurantName) {
-        this.name = name;
-        this.price = price;
-        this.discription = discription;
-        this.photoUrl = photoUrl;
-        this.restaurantName = restaurantName;
-    }
-
     public String getName() {
         return name;
     }
@@ -47,12 +38,12 @@ public class Dish extends BmobObject {
         this.discription = discription;
     }
 
-    public BmobFile getPhotoUrl() {
+    public BmobFile getPhoto() {
         return photoUrl;
     }
 
-    public void setPhotoUrl(BmobFile photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhoto(BmobFile photo) {
+        this.photoUrl = photo;
     }
 
     public String getRestaurantName() {
@@ -62,5 +53,4 @@ public class Dish extends BmobObject {
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
     }
-
 }

@@ -19,7 +19,6 @@ import cn.bmob.v3.BmobUser;
 public class DishActivity extends UniversalFragmentActivity {
 
     private static final String RESTAURANT_NAME_AND_PHPTO_URL = "org.xuxiaoxiao.order.dish.DishActivity.restaurant_name_and_phpto_url";
-    private DishModelFragment mFrag = null;
     private String[] nameAndUrl;
 
     @Override

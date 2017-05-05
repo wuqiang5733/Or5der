@@ -187,7 +187,14 @@ public class NewDishActivity extends AppCompatActivity {
                                     //bmobFile.getFileUrl()--返回的上传文件的完整地址
                                     Log.d("WQWQ","上传文件成功:" + bmobFile.getFileUrl());
 
-                                    Dish newDish = new Dish(innerDishName, Integer.parseInt(innerDishPrice), innerDishDiscription,new BmobFile("512151","",bmobFile.getFileUrl()), restaurantName);
+//                                    Dish newDish = new Dish(innerDishName, Integer.parseInt(innerDishPrice), innerDishDiscription,new BmobFile("512151","",bmobFile.getFileUrl()), restaurantName);
+                                    Dish newDish = new Dish();
+                                    newDish.setName(innerDishName);
+                                    newDish.setPrice( Integer.parseInt(innerDishPrice));
+                                    newDish.setDiscription(innerDishDiscription);
+                                    newDish.setPhoto(new BmobFile("512151","",bmobFile.getFileUrl()));
+                                    newDish.setRestaurantName(restaurantName);
+
                                     newDish.save(new SaveListener<String>() {
 
                                         @Override
