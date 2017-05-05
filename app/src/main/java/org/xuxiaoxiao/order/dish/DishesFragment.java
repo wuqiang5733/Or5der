@@ -1,10 +1,12 @@
 package org.xuxiaoxiao.order.dish;
 
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidadvance.topsnackbar.TSnackbar;
 import com.bumptech.glide.Glide;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -31,7 +34,6 @@ import com.google.zxing.integration.android.IntentResult;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.login.LoginActivity;
 import org.xuxiaoxiao.order.model.Dish;
-import org.xuxiaoxiao.order.ordereddishes.OrderedDishesActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,8 +52,6 @@ import cn.bmob.v3.listener.FindListener;
 
 public class DishesFragment extends Fragment {
 
-//    private static final String STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT = "org.xuxiaoxiao.order.dishesfragment.state_restaurant_name";
-//    private static final String RESTAURANT_PHOTO_RUL = "org.xuxiaoxiao.order.dish.DishesFragment.restaurant_phpto_url";
     private static final String RESTAURANT_NAME_AND_URL = "org.xuxiaoxiao.order.dish.DishesFragment.restaurant_name_url";
     LinearLayout orderedDishBottomBarLinearLayout;
     TextView orderedDishesDetail;
@@ -68,7 +68,7 @@ public class DishesFragment extends Fragment {
     // 存储勾选框状态的map集合
     private Map<Integer, Boolean> map = new HashMap<>();
     // 为了及时的显示点了几道菜而做的变量
-    private int orderedDishshSum = 0;
+//    private int orderedDishshSum = 0;
     // 要传送的点了的菜品，第一个元素是饭店的名字
     private ArrayList<String> orderedDishesArrayList = new ArrayList<>();
     private FloatingActionButton fab;
@@ -76,6 +76,7 @@ public class DishesFragment extends Fragment {
     private String toast;
     private String[] nameAndUrl;
     private ProgressBar progressBar;
+    CoordinatorLayout dishesFragmentContainer;
 
     @Override
     public void onResume() {
@@ -121,16 +122,10 @@ public class DishesFragment extends Fragment {
         // 要传送的点了的菜品，第一个元素是饭店的名字
         orderedDishesArrayList.add(nameAndUrl[0]);
         dishesAdapter = new DishesAdapter();
-
-//        new RestaurantAsyncTask().execute();
         if (savedInstanceState != null){
 //            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
         }
-//        Log.d("WQWQ",getClass().getSimpleName());
-          // 加上下面的代码，进入 Fragment 就会自动启动扫描功能
-//        IntentIntegrator integrator = new IntentIntegrator(getActivity());
-//        integrator.setOrientationLocked(false);
-//        integrator.initiateScan();
+
     }
 
     public static DishesFragment newInstance(String[] nameAndUrl) {
@@ -148,12 +143,9 @@ public class DishesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dishes_container, container, false);
+        dishesFragmentContainer = (CoordinatorLayout)view.findViewById(R.id.dishes_fragment_container);
         orderedDishBottomBarLinearLayout = (LinearLayout)view.findViewById(R.id.order_dish_bottom_bar_linear_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
-//        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
-//        recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
-//        linearLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(linearLayoutManager);
         orderedDishesDetail = (TextView)view.findViewById(R.id.ordered_dishes_detail_text_view);
         orderedDishesCheckButton = (Button)view.findViewById(R.id.ordered_dishes_check_button);
         fab = (FloatingActionButton) view.findViewById(R.id.refresh);
@@ -163,11 +155,11 @@ public class DishesFragment extends Fragment {
                 scanFromFragment();
             }
         });
-        if (orderedDishshSum < 1){
-            orderedDishesCheckButton.setEnabled(false);
-        }else {
-            orderedDishesCheckButton.setEnabled(true);
-        }
+//        if (orderedDishshSum < 1){
+//            orderedDishesCheckButton.setEnabled(false);
+//        }else {
+//            orderedDishesCheckButton.setEnabled(true);
+//        }
         orderedDishesCheckButton.setOnClickListener(new View.OnClickListener() {
             /**
              * 不为什么，这个按钮点击事件会触发两次
@@ -175,17 +167,7 @@ public class DishesFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                for (int i = 0; i < map.size(); i++) {
-                    if (map.get(i)) {
-                        Log.d("TAG", "你选了第：" + i + "项");
-                        orderedDishshSum ++;
-                        orderedDishesDetail.setText("已经点了" + orderedDishshSum + "道菜");
-                        orderedDishesArrayList.add(dishes.get(i).getName());
-                        Intent intent = OrderedDishesActivity.newOredredDishesIntent(getActivity(), orderedDishesArrayList);
-                        getActivity().startActivityForResult(intent,11);
-                        Log.d("WQWQ","DishesFragment-orderedDishesCheckButton");
-                    }
-                }
+
             }
         });
         progressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
@@ -234,30 +216,11 @@ public class DishesFragment extends Fragment {
 
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //用map集合保存
-                    map.put(position, isChecked);
 
-                    for (int i = 0; i < map.size(); i++) {
-                        if (map.get(i)) {
-                            Log.d("TAG", "你选了第：" + i + "项");
-                            orderedDishshSum ++;
-                            orderedDishesDetail.setText("已经点了" + orderedDishshSum + "道菜");
-                        }
-                    }
-                    if (orderedDishshSum < 1){
-                        orderedDishesCheckButton.setEnabled(false);
-                    }else {
-                        orderedDishesCheckButton.setEnabled(true);
-                    }
-//                    orderedDishshSum = 0;
                 }
             });
-            // 设置CheckBox的状态
-            if (map.get(position) == null) {
-                map.put(position, false);
-            }
-            holder.orderDishCheckBox.setChecked(map.get(position));
-            orderedDishshSum = 0;
+
+//            holder.orderDishCheckBox.setChecked(map.get(position));
         }
 
         @Override
@@ -265,18 +228,6 @@ public class DishesFragment extends Fragment {
             return dishes.size();
         }
 
-        //设置是否显示CheckBox
-        public void setShowBox() {
-            //取反
-            isOrderMode = !isOrderMode;
-        }
-
-        //初始化map集合,默认为不选中
-        public void initMap() {
-            for (int i = 0; i < dishes.size(); i++) {
-                map.put(i, false);
-            }
-        }
     }
 
     private class DishesViewHolder extends RecyclerView.ViewHolder {
@@ -328,16 +279,18 @@ public class DishesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.order_dish:
-                orderedDishBottomBarLinearLayout.setVisibility(isOrderMode ? View.GONE : View.VISIBLE);
-                fab.setVisibility(isOrderMode ? View.VISIBLE : View.GONE);
-                dishesAdapter.setShowBox();
-                dishesAdapter.initMap();
-                dishesAdapter.notifyDataSetChanged();
-//                if(isOrderMode){ // 如果不在点菜模式下了
-//                    orderedDishshSum = 0;
-//                }
-                orderedDishshSum = 0;
+//                Snackbar.make(dishesFragmentContainer, "Your Snackbar", Snackbar.LENGTH_INDEFINITE).show();
 
+                TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",Snackbar.LENGTH_INDEFINITE).show();
+//                TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",TSnackbar.LENGTH_LONG).show();
+
+                TSnackbar snackbar = TSnackbar.make(dishesFragmentContainer, "A Snackbar is a lightweight material design method for providing feedback to a user, while optionally providing an action to the user.", TSnackbar.LENGTH_INDEFINITE);
+                snackbar.setActionTextColor(Color.WHITE);
+                View snackbarView = snackbar.getView();
+                snackbarView.setBackgroundColor(Color.parseColor("#CC00CC"));
+                TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
+                textView.setTextColor(Color.YELLOW);
+                snackbar.show();
                 return true;
             case R.id.new_dish:
                 Intent intent = NewDishActivity.newIntent(getActivity(), nameAndUrl[0]);
@@ -346,20 +299,6 @@ public class DishesFragment extends Fragment {
 
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public class RestaurantAsyncTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            fetchDishData();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
         }
     }
 
@@ -377,8 +316,7 @@ public class DishesFragment extends Fragment {
                 if (e == null) {
                     // Success
                     for (Dish dish : object) {
-                        Log.d("WQWQ",dish.getPhoto().getFileUrl());
-//                        dishes.add(new Dish(dish.getName(), dish.getPrice(), dish.getDiscription(), dish.getPhotoUrl(), dish.getRestaurantName()));
+//                        Log.d("WQWQ",dish.getPhoto().getFileUrl());
                         dishes.add(dish);
                         dishesAdapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.GONE);
@@ -386,6 +324,7 @@ public class DishesFragment extends Fragment {
                 } else {
                     // Fail
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    Snackbar.make(dishesFragmentContainer,e.getMessage(),Snackbar.LENGTH_LONG).show();
                 }
             }
         });
