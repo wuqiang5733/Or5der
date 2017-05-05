@@ -100,32 +100,13 @@ public class MainFragment extends Fragment {
         }else {
             Toast.makeText(getActivity(),"请先检查网络联接",Toast.LENGTH_LONG).show();
         }
-//        _avatarProgressFrame = view.findViewById(R.id.activity_profile_avatarProgressFrame); // 头像上转的那个圈
-//        _avatarProgressFrame.setVisibility(View.VISIBLE);
 
-//        mainPrograssBar = (ProgressBar)view.findViewById(R.id.main_progress_bar);
-
-//        restaurantAdapter = new RestaurantAdapter(restaurants);
-//        restaurantRecyclerView.setAdapter(restaurantAdapter);
-//        restaurantRecyclerView.addOnItemTouchListener(new OnRecyclerItemClickListener(restaurantRecyclerView) {
-//            @Override
-//            public void onItemClick(RecyclerView.ViewHolder viewHolder) {
-//
-//            }
-//
-//            @Override
-//            public void onItemLOngClick(RecyclerView.ViewHolder viewHolder) {
-////                viewHolder.getItemId();
-//                Toast.makeText(getActivity(),String.valueOf(viewHolder.getItemId()),Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
         restaurantRecyclerView.addOnItemTouchListener(new RecyclerViewClickListener2(getActivity(), restaurantRecyclerView,
                 new RecyclerViewClickListener2.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 //                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName());
+                        Intent intent = DishActivity.newIntent(getActivity(), restaurants.get(position).getName(),restaurants.get(position).getPhoto().getFileUrl());
                         startActivity(intent);
                     }
 
@@ -177,6 +158,8 @@ public class MainFragment extends Fragment {
         Restaurant restaurant;
         TextView restaurantName;
         TextView restaurantRate;
+        TextView restaurantAddress;
+        ImageView restaurantImage;
 
 
         public RestaurantViewHolder(View itemView) {
@@ -184,6 +167,8 @@ public class MainFragment extends Fragment {
             this.root = itemView;
             restaurantName = (TextView) itemView.findViewById(R.id.restaurant_name_text_view);
             restaurantRate = (TextView) itemView.findViewById(R.id.restaurant_rate_text_view);
+            restaurantAddress = (TextView)itemView.findViewById(R.id.restaurant_address_text_view);
+            restaurantImage = (ImageView)itemView.findViewById(R.id.restaurant_image_view);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
@@ -212,6 +197,14 @@ public class MainFragment extends Fragment {
             this.restaurant = restaurant;
             restaurantName.setText(restaurant.getName());
             restaurantRate.setText(String.valueOf(restaurant.getRate()));
+            restaurantAddress.setText(restaurant.getAddress());
+            Glide
+                    .with(getActivity())
+                    .load(restaurant.getPhoto().getUrl())
+                    .centerCrop()
+//                    .placeholder(R.drawable.error)
+                    .crossFade()
+                    .into(restaurantImage);
         }
 
 

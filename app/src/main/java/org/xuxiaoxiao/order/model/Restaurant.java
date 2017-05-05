@@ -10,7 +10,7 @@ import cn.bmob.v3.datatype.BmobFile;
 public class Restaurant extends BmobObject {
     private String name;
     private Integer rate;
-    private BmobFile photoUrl;
+    private BmobFile photo;
     private String address;
 
     public String getName() {
@@ -29,12 +29,12 @@ public class Restaurant extends BmobObject {
         this.rate = rate;
     }
 
-    public BmobFile getPhotoUrl() {
-        return photoUrl;
+    public BmobFile getPhoto() {
+        return photo;
     }
 
-    public void setPhotoUrl(BmobFile photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setPhoto(BmobFile photo) {
+        this.photo = photo;
     }
 
     public String getAddress() {

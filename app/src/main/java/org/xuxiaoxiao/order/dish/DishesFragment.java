@@ -50,6 +50,7 @@ import cn.bmob.v3.listener.FindListener;
 public class DishesFragment extends Fragment {
 
     private static final String STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT = "org.xuxiaoxiao.order.dishesfragment.state_restaurant_name";
+    private static final String RESTAURANT_PHOTO_RUL = "org.xuxiaoxiao.order.dish.DishesFragment.restaurant_phpto_url";
     LinearLayout orderedDishBottomBarLinearLayout;
     TextView orderedDishesDetail;
     Button orderedDishesCheckButton;
@@ -58,6 +59,7 @@ public class DishesFragment extends Fragment {
     DishesAdapter dishesAdapter;
     //    ArrayList<Dish> dishes = new ArrayList<>();
     String restaurantName;
+    String restaurantPhotoUrl;
     GridLayoutManager gridLayoutManager;
 
     private List<Dish> dishes =
@@ -118,6 +120,7 @@ public class DishesFragment extends Fragment {
         }
 
         restaurantName = getArguments().getString(RESTAURANT_NAME);
+        restaurantPhotoUrl = getArguments().getString(RESTAURANT_PHOTO_RUL);
         // 要传送的点了的菜品，第一个元素是饭店的名字
         orderedDishesArrayList.add(restaurantName);
         dishesAdapter = new DishesAdapter();
@@ -136,10 +139,11 @@ public class DishesFragment extends Fragment {
         this.dishes = model;
     }
 
-    public static DishesFragment newInstance(String restaurantName) {
+    public static DishesFragment newInstance(String restaurantName,String restaurantPhotoUrl) {
         // 这个方法接收来自 Activity 的数据
         Bundle args = new Bundle();
         args.putString(RESTAURANT_NAME, restaurantName);
+        args.putString(RESTAURANT_PHOTO_RUL, restaurantPhotoUrl);
 
         DishesFragment fragment = new DishesFragment();
         fragment.setArguments(args);
