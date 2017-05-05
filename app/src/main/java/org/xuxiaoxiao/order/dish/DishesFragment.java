@@ -67,6 +67,8 @@ public class DishesFragment extends Fragment {
     private boolean isOrderMode = false;
     // 存储勾选框状态的map集合
     private Map<Integer, Boolean> map = new HashMap<>();
+    // 应该用一个布尔数组也能实现
+    boolean [] checkArray;
     // 为了及时的显示点了几道菜而做的变量
 //    private int orderedDishshSum = 0;
     // 要传送的点了的菜品，第一个元素是饭店的名字
@@ -205,11 +207,12 @@ public class DishesFragment extends Fragment {
         public void onBindViewHolder(DishesViewHolder holder, final int position) {
             holder.bind(dishes.get(position));
             //
-            if (isOrderMode) {
-                holder.orderDishCheckBox.setVisibility(View.VISIBLE);
-            } else {
-                holder.orderDishCheckBox.setVisibility(View.INVISIBLE);
-            }
+//            if (isOrderMode) {
+//                holder.orderDishCheckBox.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.orderDishCheckBox.setVisibility(View.INVISIBLE);
+//            }
+            holder.orderDishCheckBox.setVisibility(isOrderMode? View.VISIBLE:View.GONE);
 
             //设置checkBox改变监听
             holder.orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -249,6 +252,7 @@ public class DishesFragment extends Fragment {
             disPhotoUrl = (TextView) itemView.findViewById(R.id.dish_photourl_text_view);
             disImage = (ImageView) itemView.findViewById(R.id.dish_image_view);
             orderDishCheckBox = (CheckBox) itemView.findViewById(R.id.order_dish_menu);
+//            orderDishCheckBox.setVisibility(isOrderMode? View.VISIBLE:View.GONE);
 //            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
 
         }
@@ -279,18 +283,14 @@ public class DishesFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.order_dish:
-//                Snackbar.make(dishesFragmentContainer, "Your Snackbar", Snackbar.LENGTH_INDEFINITE).show();
+                isOrderMode = !isOrderMode;
+                if (isOrderMode){
+                    initOrder();
+                }
+                // 其实 notifyDataSetChanged 有重绘的功能
+                dishesAdapter.notifyDataSetChanged();
 
-                TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",Snackbar.LENGTH_INDEFINITE).show();
-//                TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",TSnackbar.LENGTH_LONG).show();
 
-                TSnackbar snackbar = TSnackbar.make(dishesFragmentContainer, "A Snackbar is a lightweight material design method for providing feedback to a user, while optionally providing an action to the user.", TSnackbar.LENGTH_INDEFINITE);
-                snackbar.setActionTextColor(Color.WHITE);
-                View snackbarView = snackbar.getView();
-                snackbarView.setBackgroundColor(Color.parseColor("#CC00CC"));
-                TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
-                textView.setTextColor(Color.YELLOW);
-                snackbar.show();
                 return true;
             case R.id.new_dish:
                 Intent intent = NewDishActivity.newIntent(getActivity(), nameAndUrl[0]);
@@ -300,6 +300,28 @@ public class DishesFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void initOrder() {
+        // Snackbar.make(dishesFragmentContainer, "Your Snackbar", Snackbar.LENGTH_INDEFINITE).show();
+
+        TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.", Snackbar.LENGTH_INDEFINITE).show();
+//      TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",TSnackbar.LENGTH_LONG).show();
+
+        TSnackbar snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.WHITE);
+        View snackbarView = snackbar.getView();
+        snackbarView.setBackgroundColor(Color.parseColor("#CC00CC"));
+        TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
+        textView.setTextColor(Color.YELLOW);
+        snackbar.show();
+
+        checkArray = new boolean[dishes.size()];
+        for (int i=0; i<dishes.size(); i++){
+            checkArray[i] = false;
+        }
+        // 其实 notifyDataSetChanged 有重绘的功能
+        dishesAdapter.notifyDataSetChanged();
     }
 
     private void fetchDishData() {
