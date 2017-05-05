@@ -19,11 +19,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
+import org.xuxiaoxiao.order.infrastructure.NetWorkUtils;
 import org.xuxiaoxiao.order.infrastructure.RecycleViewDivider;
 import org.xuxiaoxiao.order.infrastructure.RecyclerViewClickListener2;
 import org.xuxiaoxiao.order.login.LoginActivity;
@@ -93,7 +95,11 @@ public class MainFragment extends Fragment {
         restaurantAdapter = new RestaurantAdapter();
         restaurantRecyclerView.setAdapter(restaurantAdapter);
         progressBar = (ProgressBar)view.findViewById(R.id.main_fragment_progres_bar);
-        new RestaurantAsyncTask(progressBar).execute();
+        if (NetWorkUtils.isNetworkConnected(getActivity())){
+            new RestaurantAsyncTask(progressBar).execute();
+        }else {
+            Toast.makeText(getActivity(),"请先检查网络联接",Toast.LENGTH_LONG).show();
+        }
 //        _avatarProgressFrame = view.findViewById(R.id.activity_profile_avatarProgressFrame); // 头像上转的那个圈
 //        _avatarProgressFrame.setVisibility(View.VISIBLE);
 
@@ -263,6 +269,10 @@ public class MainFragment extends Fragment {
                     } else {
                         // Fail
                         Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
+                    }
+                    if (object == null){
+                        Log.i("bmob", "出错了 。。查询");
+                        getActivity().finish();
                     }
                     if (object.size() == innerRestaurants.size()) {
                         onProgressUpdate(innerRestaurants);

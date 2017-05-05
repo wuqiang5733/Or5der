@@ -70,7 +70,7 @@ public class MainActivity extends UniversalFragmentActivity {
     @Override
     protected String[] getDesiredPermissions() {
 //        return (new String[]{});
-        return (new String[]{WRITE_EXTERNAL_STORAGE,INTERNET,ACCESS_NETWORK_STATE,READ_EXTERNAL_STORAGE});
+        return (new String[]{WRITE_EXTERNAL_STORAGE,INTERNET,ACCESS_NETWORK_STATE,READ_EXTERNAL_STORAGE,ACCESS_NETWORK_STATE});
     }
 
     @Override
