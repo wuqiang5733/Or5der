@@ -18,7 +18,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.dish.DishActivity;
@@ -80,7 +83,7 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_container, container, false);
         restaurantRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_restaurant);
         restaurantRecyclerView.setHasFixedSize(true);
         Drawable divider = getResources().getDrawable(R.drawable.item_divider);
@@ -125,6 +128,11 @@ public class MainFragment extends Fragment {
 //                        Toast.makeText(getActivity(), "Long Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
                     }
                 }));
+        try {
+            Glide.with(this).load(R.drawable.cover).into((ImageView) view.findViewById(R.id.backdrop));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return view;
     }
 

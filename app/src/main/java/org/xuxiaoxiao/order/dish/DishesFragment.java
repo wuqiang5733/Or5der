@@ -150,7 +150,7 @@ public class DishesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_dishsh, container, false);
+        View view = inflater.inflate(R.layout.fragment_dishes_container, container, false);
         orderedDishBottomBarLinearLayout = (LinearLayout)view.findViewById(R.id.order_dish_bottom_bar_linear_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
 //        Drawable divider = getResources().getDrawable(R.drawable.item_divider);
