@@ -67,7 +67,7 @@ public class DishesFragment extends Fragment {
     // 存储勾选框状态的map集合
     private Map<Integer, Boolean> map = new HashMap<>();
     // 应该用一个布尔数组也能实现
-    boolean [] checkArray;
+    boolean[] checkArray;
     // 为了及时的显示点了几道菜而做的变量
 //    private int orderedDishshSum = 0;
     // 要传送的点了的菜品，第一个元素是饭店的名字
@@ -78,7 +78,7 @@ public class DishesFragment extends Fragment {
     private String[] nameAndUrl;
     private ProgressBar progressBar;
     CoordinatorLayout dishesFragmentContainer;
-//    Toolbar secondToolBar;
+    //    Toolbar secondToolBar;
     TSnackbar snackbar;
 
     @Override
@@ -87,6 +87,7 @@ public class DishesFragment extends Fragment {
         orderedDishesArrayList.clear();
         orderedDishesArrayList.add(nameAndUrl[0]);
     }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
@@ -96,7 +97,7 @@ public class DishesFragment extends Fragment {
         super.onSaveInstanceState(savedInstanceState);
     }
 
-//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+    //    public void onRestoreInstanceState(Bundle savedInstanceState) {
 //        // Always call the superclass so it can restore the view hierarchy
 //        super.onRestoreInstanceState(savedInstanceState);
 //
@@ -112,20 +113,20 @@ public class DishesFragment extends Fragment {
 
 
         BmobUser bmobUser = BmobUser.getCurrentUser();
-        if(bmobUser != null){
+        if (bmobUser != null) {
             // 允许用户使用应用
-        }else{
+        } else {
             //缓存用户对象为空时， 可打开用户注册界面…
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
         }
         nameAndUrl = getArguments().getStringArray(RESTAURANT_NAME_AND_URL);
 
-        Log.d("WQWQ----",nameAndUrl[0]);
+        Log.d("WQWQ----", nameAndUrl[0]);
         // 要传送的点了的菜品，第一个元素是饭店的名字
         orderedDishesArrayList.add(nameAndUrl[0]);
         dishesAdapter = new DishesAdapter();
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
 //            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
         }
 
@@ -134,7 +135,7 @@ public class DishesFragment extends Fragment {
     public static DishesFragment newInstance(String[] nameAndUrl) {
         // 这个方法接收来自 Activity 的数据
         Bundle args = new Bundle();
-        args.putStringArray(RESTAURANT_NAME_AND_URL,nameAndUrl);
+        args.putStringArray(RESTAURANT_NAME_AND_URL, nameAndUrl);
 
         DishesFragment fragment = new DishesFragment();
         fragment.setArguments(args);
@@ -146,11 +147,11 @@ public class DishesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dishes_container, container, false);
-        dishesFragmentContainer = (CoordinatorLayout)view.findViewById(R.id.dishes_fragment_container);
-        orderedDishBottomBarLinearLayout = (LinearLayout)view.findViewById(R.id.order_dish_bottom_bar_linear_layout);
+        dishesFragmentContainer = (CoordinatorLayout) view.findViewById(R.id.dishes_fragment_container);
+        orderedDishBottomBarLinearLayout = (LinearLayout) view.findViewById(R.id.order_dish_bottom_bar_linear_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
-        orderedDishesDetail = (TextView)view.findViewById(R.id.ordered_dishes_detail_text_view);
-        orderedDishesCheckButton = (Button)view.findViewById(R.id.ordered_dishes_check_button);
+        orderedDishesDetail = (TextView) view.findViewById(R.id.ordered_dishes_detail_text_view);
+        orderedDishesCheckButton = (Button) view.findViewById(R.id.ordered_dishes_check_button);
 //        secondToolBar = (Toolbar)view.findViewById(R.id.second_toolbar);
 //        secondToolBar.setSubtitle("text");
         fab = (FloatingActionButton) view.findViewById(R.id.refresh);
@@ -171,7 +172,7 @@ public class DishesFragment extends Fragment {
 
             }
         });
-        progressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 //        recyclerView.setHasFixedSize(true);
 
@@ -213,7 +214,7 @@ public class DishesFragment extends Fragment {
 //            } else {
 //                holder.orderDishCheckBox.setVisibility(View.INVISIBLE);
 //            }
-            holder.orderDishCheckBox.setVisibility(isOrderMode? View.VISIBLE:View.GONE);
+            holder.orderDishCheckBox.setVisibility(isOrderMode ? View.VISIBLE : View.GONE);
 
             //设置checkBox改变监听
 //            holder.orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -225,7 +226,7 @@ public class DishesFragment extends Fragment {
 //            });
 
 //            holder.orderDishCheckBox.setChecked(map.get(position));
-            if (isOrderMode){
+            if (isOrderMode) {
                 // 如果没有一个判断，会出现： Attempt to read from null array 异常
                 holder.orderDishCheckBox.setChecked(checkArray[position]);
 
@@ -285,17 +286,22 @@ public class DishesFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // 获得在 onBindViewHolder 当中加的标签
-                    int i = (int)v.getTag();
+                    int i = (int) v.getTag();
                     // 把当前的 View 转换成 CheckBox
-                    CheckBox tempCheckBox = (CheckBox)v;
+                    CheckBox tempCheckBox = (CheckBox) v;
                     // 把当前 CheckBox 的选中状态保存下来
                     checkArray[i] = tempCheckBox.isChecked();
-                    for (int j=0; j<checkArray.length;j++){
-                        Log.d("WQWQ",j+1 + " : " + checkArray[j]);
+                    int checkedNum = 0;
+                    for (int j = 0; j < checkArray.length; j++) {
+//                        Log.d("WQWQ", j + 1 + " : " + checkArray[j]);
+                        if (checkArray[j] == true){
+                            checkedNum++;
+                        }
                     }
+                    snackbar.setText("你已经选中了" + checkedNum + "道菜");
 //                    Log.d("WQWQ",String.valueOf(i));
 //                    Log.d("WQWQ",String.valueOf(tempCheckBox.isChecked()));
-                      Log.d("WQWQ","=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
+                    Log.d("WQWQ", "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
 
                 }
             });
@@ -328,10 +334,10 @@ public class DishesFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.order_dish:
                 isOrderMode = !isOrderMode;
-                if (isOrderMode){
+                if (isOrderMode) {
                     initOrder();
                     snackbar.show();
-                }else {
+                } else {
                     snackbar.dismiss();
                 }
                 // 其实 notifyDataSetChanged 有重绘的功能
@@ -352,7 +358,7 @@ public class DishesFragment extends Fragment {
     private void initOrder() {
         // Snackbar.make(dishesFragmentContainer, "Your Snackbar", Snackbar.LENGTH_INDEFINITE).show();
 
-        TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.", Snackbar.LENGTH_INDEFINITE).show();
+        TSnackbar.make(dishesFragmentContainer, "Hello from TSnackBar.", Snackbar.LENGTH_INDEFINITE).show();
 //      TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",TSnackbar.LENGTH_LONG).show();
 
         snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
@@ -365,7 +371,7 @@ public class DishesFragment extends Fragment {
 //        snackbar.show();
 
         checkArray = new boolean[dishes.size()];
-        for (int i=0; i<dishes.size(); i++){
+        for (int i = 0; i < dishes.size(); i++) {
             checkArray[i] = false;
         }
         // 其实 notifyDataSetChanged 有重绘的功能
@@ -394,18 +400,19 @@ public class DishesFragment extends Fragment {
                 } else {
                     // Fail
                     Log.i("bmob", "失败：" + e.getMessage() + "," + e.getErrorCode());
-                    Snackbar.make(dishesFragmentContainer,e.getMessage(),Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(dishesFragmentContainer, e.getMessage(), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
 
     }
+
     public void scanFromFragment() {
         IntentIntegrator.forSupportFragment(this).initiateScan();
     }
 
     private void displayToast() {
-        if(getActivity() != null && toast != null) {
+        if (getActivity() != null && toast != null) {
             Toast.makeText(getActivity(), toast, Toast.LENGTH_LONG).show();
             toast = null;
         }
@@ -414,9 +421,9 @@ public class DishesFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
-                toast = "Cancelled from fragment";
+        if (result != null) {
+            if (result.getContents() == null) {
+                toast = "您取消了读取";
             } else {
                 toast = "二维码代表：" + result.getContents();
             }
