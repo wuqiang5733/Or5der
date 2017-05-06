@@ -284,8 +284,19 @@ public class DishesFragment extends Fragment {
             orderDishCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 获得在 onBindViewHolder 当中加的标签
                     int i = (int)v.getTag();
-                    Log.d("WQWQ",String.valueOf(i));
+                    // 把当前的 View 转换成 CheckBox
+                    CheckBox tempCheckBox = (CheckBox)v;
+                    // 把当前 CheckBox 的选中状态保存下来
+                    checkArray[i] = tempCheckBox.isChecked();
+                    for (int j=0; j<checkArray.length;j++){
+                        Log.d("WQWQ",j+1 + " : " + checkArray[j]);
+                    }
+//                    Log.d("WQWQ",String.valueOf(i));
+//                    Log.d("WQWQ",String.valueOf(tempCheckBox.isChecked()));
+                      Log.d("WQWQ","=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
+
                 }
             });
         }
