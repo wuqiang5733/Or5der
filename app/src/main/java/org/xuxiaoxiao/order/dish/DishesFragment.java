@@ -294,13 +294,29 @@ public class DishesFragment extends Fragment {
                     int checkedNum = 0;
                     for (int j = 0; j < checkArray.length; j++) {
 //                        Log.d("WQWQ", j + 1 + " : " + checkArray[j]);
-                        if (checkArray[j] == true){
+                        if (checkArray[j] == true) {
                             checkedNum++;
                         }
                     }
-                    snackbar.setText("你已经选中了" + checkedNum + "道菜");
+                    if (checkedNum > 0) {
+                        snackbar.setText("你已经选中了" + checkedNum + "道菜");
 //                    Log.d("WQWQ",String.valueOf(i));
 //                    Log.d("WQWQ",String.valueOf(tempCheckBox.isChecked()));
+                        snackbar.setAction("查看", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getActivity(), "点我吧", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        snackbar.setText("请勾选您要点的菜");
+                        snackbar.setAction("", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+                    }
                     Log.d("WQWQ", "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
 
                 }
@@ -361,7 +377,7 @@ public class DishesFragment extends Fragment {
         TSnackbar.make(dishesFragmentContainer, "Hello from TSnackBar.", Snackbar.LENGTH_INDEFINITE).show();
 //      TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",TSnackbar.LENGTH_LONG).show();
 
-        snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
+        snackbar = TSnackbar.make(dishesFragmentContainer, "请勾选您要点的菜", TSnackbar.LENGTH_INDEFINITE);
 //        TSnackbar snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.WHITE);
         View snackbarView = snackbar.getView();
