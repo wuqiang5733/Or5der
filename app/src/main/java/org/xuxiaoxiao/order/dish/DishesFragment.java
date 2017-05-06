@@ -269,6 +269,7 @@ public class DishesFragment extends Fragment {
             orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // 注意这个事件在上下拖动RecyclerView的时候会不停的触发，所以做计算的时候，要特别小心
                     int i = (int)root.getTag();
                     snackbar.setText(String.valueOf(i));
 //                    CheckBox checkBox = (CheckBox)itemView.findViewById(i);
