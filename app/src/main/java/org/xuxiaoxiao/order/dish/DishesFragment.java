@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -161,11 +160,7 @@ public class DishesFragment extends Fragment {
                 scanFromFragment();
             }
         });
-//        if (orderedDishshSum < 1){
-//            orderedDishesCheckButton.setEnabled(false);
-//        }else {
-//            orderedDishesCheckButton.setEnabled(true);
-//        }
+
         orderedDishesCheckButton.setOnClickListener(new View.OnClickListener() {
             /**
              * 不为什么，这个按钮点击事件会触发两次
@@ -210,7 +205,8 @@ public class DishesFragment extends Fragment {
         @Override
         public void onBindViewHolder(DishesViewHolder holder, final int position) {
             holder.bind(dishes.get(position));
-            holder.root.setTag(position);
+//            holder.root.setTag(position);
+            holder.orderDishCheckBox.setTag(position);
             //
 //            if (isOrderMode) {
 //                holder.orderDishCheckBox.setVisibility(View.VISIBLE);
@@ -266,18 +262,30 @@ public class DishesFragment extends Fragment {
             orderDishCheckBox = (CheckBox) itemView.findViewById(R.id.order_dish_menu);
 //            orderDishCheckBox.setVisibility(isOrderMode? View.VISIBLE:View.GONE);
 //            imageView =(WebImageView) itemView.findViewById(R.id.dish_web_image_view);
-            orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+//            orderDishCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+//                @Override
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    int orderedSum = 0 ;
+//                    // 注意这个事件在上下拖动RecyclerView的时候会不停的触发，所以做计算的时候，要特别小心
+//                    int i = (int)root.getTag();
+////                    snackbar.setText(String.valueOf(i));
+////                    CheckBox checkBox = (CheckBox)itemView.findViewById(i);
+//                    checkArray[i] = isChecked;
+//                    for (int j=0;j<dishes.size();j++){
+////                        Log.d("WQWQ",j+1 + ": " + String.valueOf(checkArray[j]));
+//                        if (checkArray[i] == true){
+//                            orderedSum++;
+//                        }
+//                        snackbar.setText("你已经点了" + orderedSum + "道菜");
+//                    }
+////                    Log.d("WQWQ","=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
+//                }
+//            });
+            orderDishCheckBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // 注意这个事件在上下拖动RecyclerView的时候会不停的触发，所以做计算的时候，要特别小心
-                    int i = (int)root.getTag();
-                    snackbar.setText(String.valueOf(i));
-//                    CheckBox checkBox = (CheckBox)itemView.findViewById(i);
-                    checkArray[i] = isChecked;
-                    for (int j=0;j<dishes.size();j++){
-                        Log.d("WQWQ",j+1 + ": " + String.valueOf(checkArray[j]));
-                    }
-                    Log.d("WQWQ","=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
+                public void onClick(View v) {
+                    int i = (int)v.getTag();
+                    Log.d("WQWQ",String.valueOf(i));
                 }
             });
         }
