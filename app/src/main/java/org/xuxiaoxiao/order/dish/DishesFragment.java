@@ -36,9 +36,7 @@ import org.xuxiaoxiao.order.model.Dish;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -64,17 +62,14 @@ public class DishesFragment extends Fragment {
             Collections.synchronizedList(new ArrayList<Dish>());
     // 决定是否是在点菜模式下
     private boolean isOrderMode = false;
-    // 存储勾选框状态的map集合
-    private Map<Integer, Boolean> map = new HashMap<>();
     // 应该用一个布尔数组也能实现
     boolean[] checkArray;
-    // 为了及时的显示点了几道菜而做的变量
-//    private int orderedDishshSum = 0;
     // 要传送的点了的菜品，第一个元素是饭店的名字
-    private ArrayList<String> orderedDishesArrayList = new ArrayList<>();
+    private String[] orderedDishes;
     private FloatingActionButton fab;
     // 扫描二维码用的一个变量
     private String toast;
+    // 储存传递过来的饭店的图像与名字以用来查询
     private String[] nameAndUrl;
     private ProgressBar progressBar;
     CoordinatorLayout dishesFragmentContainer;
@@ -84,8 +79,6 @@ public class DishesFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        orderedDishesArrayList.clear();
-        orderedDishesArrayList.add(nameAndUrl[0]);
     }
 
     @Override
@@ -123,8 +116,7 @@ public class DishesFragment extends Fragment {
         nameAndUrl = getArguments().getStringArray(RESTAURANT_NAME_AND_URL);
 
         Log.d("WQWQ----", nameAndUrl[0]);
-        // 要传送的点了的菜品，第一个元素是饭店的名字
-        orderedDishesArrayList.add(nameAndUrl[0]);
+
         dishesAdapter = new DishesAdapter();
         if (savedInstanceState != null) {
 //            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
@@ -302,10 +294,27 @@ public class DishesFragment extends Fragment {
                         snackbar.setText("你已经选中了" + checkedNum + "道菜");
 //                    Log.d("WQWQ",String.valueOf(i));
 //                    Log.d("WQWQ",String.valueOf(tempCheckBox.isChecked()));
+                        final int finalCheckedNum = checkedNum;
                         snackbar.setAction("查看", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Toast.makeText(getActivity(), "点我吧", Toast.LENGTH_SHORT).show();
+                                // 之所以要长度加一，是因为数组的第一个元素是放的饭店的名字，之后才是菜品的名字
+                                orderedDishes = new String[finalCheckedNum + 1];
+                                // 放入饭店的名字
+                                orderedDishes[0] = nameAndUrl[0];
+                                int temp = 0;
+                                for (int j = 0; j < checkArray.length; j++) {
+                                    // 把选中的菜品的名字加入到数组当中
+                                    if (checkArray[j] == true) {
+                                        int tempSecond = ++temp;
+                                        orderedDishes[tempSecond] = dishes.get(tempSecond).getName();
+                                    }
+                                }
+                                for (int i=0;i<orderedDishes.length;i++){
+                                    Log.d("WQWQ", orderedDishes[i]);
+                                }
+
                             }
                         });
                     } else {
@@ -313,11 +322,10 @@ public class DishesFragment extends Fragment {
                         snackbar.setAction("", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-
+                                // 这是个空事件，它的作用就是在 在没有勾选的情况下让『查看』按钮消失
                             }
                         });
                     }
-                    Log.d("WQWQ", "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
 
                 }
             });
