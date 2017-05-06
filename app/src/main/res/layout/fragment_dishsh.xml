@@ -22,7 +22,10 @@ tools:showIn="@layout/fragment_dishes_container">
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:orientation="horizontal"
-    android:visibility="gone">
+    android:visibility="gone"
+    android:background="@color/colorPrimaryDark"
+    android:layout_alignParentTop="true"
+    >
 
     <TextView
         android:id="@+id/ordered_dishes_detail_text_view"

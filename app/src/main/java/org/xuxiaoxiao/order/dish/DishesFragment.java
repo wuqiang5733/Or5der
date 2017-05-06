@@ -79,6 +79,8 @@ public class DishesFragment extends Fragment {
     private String[] nameAndUrl;
     private ProgressBar progressBar;
     CoordinatorLayout dishesFragmentContainer;
+//    Toolbar secondToolBar;
+    TSnackbar snackbar;
 
     @Override
     public void onResume() {
@@ -150,6 +152,8 @@ public class DishesFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_dishes);
         orderedDishesDetail = (TextView)view.findViewById(R.id.ordered_dishes_detail_text_view);
         orderedDishesCheckButton = (Button)view.findViewById(R.id.ordered_dishes_check_button);
+//        secondToolBar = (Toolbar)view.findViewById(R.id.second_toolbar);
+//        secondToolBar.setSubtitle("text");
         fab = (FloatingActionButton) view.findViewById(R.id.refresh);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -266,6 +270,7 @@ public class DishesFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int i = (int)root.getTag();
+                    snackbar.setText(String.valueOf(i));
 //                    CheckBox checkBox = (CheckBox)itemView.findViewById(i);
                     checkArray[i] = isChecked;
                     for (int j=0;j<dishes.size();j++){
@@ -305,6 +310,9 @@ public class DishesFragment extends Fragment {
                 isOrderMode = !isOrderMode;
                 if (isOrderMode){
                     initOrder();
+                    snackbar.show();
+                }else {
+                    snackbar.dismiss();
                 }
                 // 其实 notifyDataSetChanged 有重绘的功能
                 dishesAdapter.notifyDataSetChanged();
@@ -327,13 +335,14 @@ public class DishesFragment extends Fragment {
         TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.", Snackbar.LENGTH_INDEFINITE).show();
 //      TSnackbar.make(dishesFragmentContainer,"Hello from TSnackBar.",TSnackbar.LENGTH_LONG).show();
 
-        TSnackbar snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
+        snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
+//        TSnackbar snackbar = TSnackbar.make(dishesFragmentContainer, String.valueOf(isOrderMode), TSnackbar.LENGTH_INDEFINITE);
         snackbar.setActionTextColor(Color.WHITE);
         View snackbarView = snackbar.getView();
         snackbarView.setBackgroundColor(Color.parseColor("#CC00CC"));
         TextView textView = (TextView) snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
         textView.setTextColor(Color.YELLOW);
-        snackbar.show();
+//        snackbar.show();
 
         checkArray = new boolean[dishes.size()];
         for (int i=0; i<dishes.size(); i++){
