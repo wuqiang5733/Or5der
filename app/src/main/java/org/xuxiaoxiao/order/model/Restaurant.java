@@ -12,6 +12,8 @@ public class Restaurant extends BmobObject {
     private Integer rate;
     private BmobFile photo;
     private String address;
+    private String pinYinName;
+
 
     public String getName() {
         return name;
@@ -43,5 +45,12 @@ public class Restaurant extends BmobObject {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+    public String getPinYinName() {
+        return pinYinName;
+    }
+
+    public void setPinYinName(String pinYinName) {
+        this.pinYinName = pinYinName;
     }
 }

@@ -38,6 +38,8 @@ import org.xuxiaoxiao.order.ordereddishes.OrderedDishesActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -116,13 +118,13 @@ public class DishesFragment extends Fragment {
         }
         nameAndUrl = getArguments().getStringArray(RESTAURANT_NAME_AND_URL);
 
-        Log.d("WQWQ----", nameAndUrl[0]);
+        Log.d("WQWQ----nameAndUrl[0]", nameAndUrl[0]);
 
         dishesAdapter = new DishesAdapter();
         if (savedInstanceState != null) {
 //            restaurantName = savedInstanceState.getString(STATE_RESTAURANT_NAME_IN_DISHES_FRAGMENT);
         }
-
+Log.d("WQWQ","onCreate");
     }
 
     public static DishesFragment newInstance(String[] nameAndUrl) {
@@ -412,7 +414,8 @@ public class DishesFragment extends Fragment {
         query.setLimit(20);
         // 获得来自 Activity 的数据
 //        final String restaurantName = getArguments().getString(RESTAURANT_NAME);
-        query.addWhereEqualTo("restaurantName", nameAndUrl[0]);
+//        query.addWhereEqualTo("restaurantName", nameAndUrl[0]);
+        query.addWhereEqualTo("pinYinName", nameAndUrl[0]);
 
         query.findObjects(new FindListener<Dish>() {
             @Override
@@ -470,6 +473,24 @@ public class DishesFragment extends Fragment {
                 toast = "您取消了读取";
             } else {
                 toast = "二维码代表：" + result.getContents();
+                String[] aa = result.getContents().split("\\^\\*"); //这样才能得到正确的结果
+
+                Pattern p = Pattern.compile("[0-9]+");
+                Matcher m = p.matcher(aa[3]);
+                boolean b = m.matches();
+                String[] strArray = new String[2];
+                strArray[1] = "http://bmob-cdn-10939.b0.upaiyun.com/2017/05/05/dcf3811b40c2d1b08059fb2cd8de16af.png";
+                strArray[0] = aa[2];
+                Log.d("WQWQ_0",aa[0]);
+                Log.d("WQWQ_1",aa[1]);
+                Log.d("WQWQ_2",aa[2]);
+                Log.d("WQWQ_strArray[0]",strArray[0]);
+                Log.d("WQWQ_strArray[1]",strArray[1]);
+                if ((aa[1].equals("xiao"))&&(b)){
+                    Intent intent = DishActivity.newIntent(getActivity(), strArray);
+                    startActivity(intent);
+                }
+                getActivity().finish();
             }
 // zxing-android-embedded : https://github.com/journeyapps/zxing-android-embedded
             // At this point we may or may not have a reference to the activity

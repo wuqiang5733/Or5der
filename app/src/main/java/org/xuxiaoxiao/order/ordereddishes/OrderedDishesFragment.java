@@ -137,7 +137,7 @@ public class OrderedDishesFragment extends Fragment {
             BmobQuery<Dish> query = new BmobQuery<Dish>();
             query.setLimit(20);
             // 添加限定条件 restaurantNme(饭店的名字)与name(菜名)：菜名这个限定条件是一个字符串数组
-            query.addWhereEqualTo("restaurantName", params[0][0]);
+            query.addWhereEqualTo("pinYinName", params[0][0]);
             // 查询条件必须是数组，所以需要转换一下，从ArrayList<String>当中生成一个数组
             String[] names = new String[params[0].length - 1];
             for (int i = 0; i < params[0].length - 1; i++) {

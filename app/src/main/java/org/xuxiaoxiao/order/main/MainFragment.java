@@ -36,6 +36,8 @@ import org.xuxiaoxiao.order.model.Restaurant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
@@ -81,6 +83,23 @@ public class MainFragment extends Fragment {
         setHasOptionsMenu(true);
 //        new LoadWordsThread().start();
 
+        String[] aa = "^*xiao^*bbb^*345".split("\\^\\*"); //这样才能得到正确的结果
+        System.out.println(String.valueOf(aa[0] == null));
+        System.out.println(aa[0].getClass());
+        System.out.println(aa[1].getClass());
+        System.out.println(aa[1]);
+        System.out.println(String.valueOf(aa[1].equals("xiao")));
+        System.out.println("看下面四个输出的值");
+
+        for (int i = 0 ; i <aa.length ; i++ ) {
+
+            System.out.println("--"+aa[i]);
+
+        }
+        Pattern p = Pattern.compile("[0-9]+");
+        Matcher m = p.matcher("674");
+        boolean b = m.matches();
+//        System.out.println(String.valueOf(b));
 
     }
 
@@ -112,7 +131,9 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
 //                        Toast.makeText(getActivity(), "Click " + restaurants.get(position).getName(), Toast.LENGTH_SHORT).show();
-                        strArray[0] = restaurants.get(position).getName();
+                        // 因为扫描不支持中文，所以改成了查询 拼音  名字
+                        strArray[0] = restaurants.get(position).getPinYinName();
+//                        strArray[0] = restaurants.get(position).getName();
                         strArray[1] = restaurants.get(position).getPhoto().getFileUrl();
 
                         Intent intent = DishActivity.newIntent(getActivity(), strArray);
