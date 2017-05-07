@@ -33,6 +33,7 @@ import com.google.zxing.integration.android.IntentResult;
 import org.xuxiaoxiao.order.R;
 import org.xuxiaoxiao.order.login.LoginActivity;
 import org.xuxiaoxiao.order.model.Dish;
+import org.xuxiaoxiao.order.ordereddishes.OrderedDishesActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -191,7 +192,7 @@ public class DishesFragment extends Fragment {
 
         @Override
         public DishesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = getActivity().getLayoutInflater().inflate(R.layout.dish, parent, false);
+            View view = getActivity().getLayoutInflater().inflate(R.layout.dish_item, parent, false);
             return new DishesViewHolder(view);
         }
 
@@ -298,7 +299,7 @@ public class DishesFragment extends Fragment {
                         snackbar.setAction("查看", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(getActivity(), "点我吧", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getActivity(), "点我吧", Toast.LENGTH_SHORT).show();
                                 // 之所以要长度加一，是因为数组的第一个元素是放的饭店的名字，之后才是菜品的名字
                                 orderedDishes = new String[finalCheckedNum + 1];
                                 // 放入饭店的名字
@@ -308,13 +309,15 @@ public class DishesFragment extends Fragment {
                                     // 把选中的菜品的名字加入到数组当中
                                     if (checkArray[j] == true) {
                                         int tempSecond = ++temp;
-                                        orderedDishes[tempSecond] = dishes.get(tempSecond).getName();
+                                        // 注意下面的逻辑一定要清晰
+                                        orderedDishes[tempSecond] = dishes.get(tempSecond - 1).getName();
                                     }
                                 }
-                                for (int i=0;i<orderedDishes.length;i++){
-                                    Log.d("WQWQ", orderedDishes[i]);
-                                }
-
+//                                for (int i = 0; i < orderedDishes.length; i++) {
+//                                    Log.d("WQWQ", orderedDishes[i]);
+//                                }
+                                Intent intent = OrderedDishesActivity.newOredredDishesIntent(getActivity(), orderedDishes);
+                                startActivityForResult(intent, 5757);
                             }
                         });
                     } else {
@@ -380,6 +383,7 @@ public class DishesFragment extends Fragment {
     }
 
     private void initOrder() {
+        Toast.makeText(getActivity(), "initOrder", Toast.LENGTH_LONG).show();
         // Snackbar.make(dishesFragmentContainer, "Your Snackbar", Snackbar.LENGTH_INDEFINITE).show();
 
         TSnackbar.make(dishesFragmentContainer, "Hello from TSnackBar.", Snackbar.LENGTH_INDEFINITE).show();
@@ -444,6 +448,22 @@ public class DishesFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 5757 && resultCode == 31) {
+            Log.d("WQWQ", "点的确认");
+        }
+        if (requestCode == 5757 && resultCode == 32) {
+            Log.d("WQWQ", "点的继续");
+            snackbar.setText("7890").show();
+            isOrderMode = true;
+            initOrder();
+            snackbar.show();
+            Toast.makeText(getActivity(), "点的继续", Toast.LENGTH_SHORT).show();
+        }
+        if (requestCode == 5757 && resultCode == 33) {
+            Log.d("WQWQ", "点的取消");
+            isOrderMode = false;
+            dishesAdapter.notifyDataSetChanged();
+        }
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
@@ -463,6 +483,15 @@ public class DishesFragment extends Fragment {
 
         displayToast();
     }
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 5757 && resultCode == 31) {
+//            Log.d("WQWQ","点的确认");
+//        }
+//        if (requestCode == 5757 && resultCode == 32) {
+//            Log.d("WQWQ","点的继续");
+//        }
+//    }
 
     /**
      * 因此，在需要更新进度值时，AsyncTask的基本生命周期过程为：

@@ -1,5 +1,6 @@
 package org.xuxiaoxiao.order.ordereddishes;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -31,10 +35,13 @@ import cn.bmob.v3.listener.FindListener;
  */
 
 public class OrderedDishesFragment extends Fragment {
+    @BindView(R.id.confirm_button) Button confirmButton;
+    @BindView(R.id.continue_button) Button continueButton;
+    @BindView(R.id.cancel_button) Button cancelButton;
 
     private static final String ORDERED_DISHES = "org.xuxiaoxiao.ordereddishesfragment.ordered_dishes";
     // 传送过来的点了的菜品，第一个元素是饭店的名字
-    private ArrayList<String> orderedDishesArrayList = new ArrayList<>();
+    private String[] orderedDishesArray;
     ProgressBar progressBar;
     // 用于存放下载完成之后的 Dishes
     ArrayList<Dish> orderDishes = new ArrayList<>();
@@ -44,9 +51,9 @@ public class OrderedDishesFragment extends Fragment {
     OrderDishesAdapter orderDishesAdapter;
     Utility myUtility;
 
-    public static Fragment newInstance(ArrayList<String> orderedDishesArrayList) {
+    public static Fragment newInstance(String[] orderedDishesArray) {
         Bundle args = new Bundle();
-        args.putStringArrayList(ORDERED_DISHES, orderedDishesArrayList);
+        args.putStringArray(ORDERED_DISHES, orderedDishesArray);
         OrderedDishesFragment orderedDishesFragment = new OrderedDishesFragment();
         orderedDishesFragment.setArguments(args);
         return orderedDishesFragment;
@@ -55,7 +62,7 @@ public class OrderedDishesFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        orderedDishesArrayList = getArguments().getStringArrayList(ORDERED_DISHES);
+        orderedDishesArray = getArguments().getStringArray(ORDERED_DISHES);
 //        for (String s : orderedDishesArrayList) {
 //            Log.d("WQWQ", s);
 //        }
@@ -67,19 +74,47 @@ public class OrderedDishesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ordered_dishes, container, false);
+        ButterKnife.bind(this,view);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         // 异步加载必须放到这儿，要不 ProgressBar 还是 Null
         asyncTask = new loadOrderedDishes(progressBar);
-        asyncTask.execute(orderedDishesArrayList);//将图片url作为参数传入到doInBackground()中
+        asyncTask.execute(orderedDishesArray);//将图片url作为参数传入到doInBackground()中
         recyclerView = (RecyclerView) view.findViewById(R.id.ordered_dishes_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         orderDishesAdapter = new OrderDishesAdapter();
         recyclerView.setAdapter(orderDishesAdapter);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.putExtra("back3","confirm");
+                getActivity().setResult(31, i);
+                getActivity().finish();
+            }
+        });
+        continueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.putExtra("back3","continue");
+                getActivity().setResult(32, i);
+                getActivity().finish();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.putExtra("back3","continue");
+                getActivity().setResult(33, i);
+                getActivity().finish();
+            }
+        });
         return view;
     }
 
-    public class loadOrderedDishes extends AsyncTask<ArrayList<String>, ArrayList<Dish>,Void> {
+    public class loadOrderedDishes extends AsyncTask<String[], ArrayList<Dish>,Void> {
         private ProgressBar progressBar;//进度条
 
         public loadOrderedDishes(ProgressBar progressBar) {
@@ -95,18 +130,18 @@ public class OrderedDishesFragment extends Fragment {
         }
 
         @Override
-        protected Void doInBackground(ArrayList<String>... params) {
+        protected Void doInBackground(String[]... params) {
             final ArrayList<Dish> asyncOrderDishes = new ArrayList<>();
             // Fetch data from website
             // BmobQuery<Dish> 就限定了查询的表的名字
             BmobQuery<Dish> query = new BmobQuery<Dish>();
             query.setLimit(20);
             // 添加限定条件 restaurantNme(饭店的名字)与name(菜名)：菜名这个限定条件是一个字符串数组
-            query.addWhereEqualTo("restaurantName", params[0].get(0));
+            query.addWhereEqualTo("restaurantName", params[0][0]);
             // 查询条件必须是数组，所以需要转换一下，从ArrayList<String>当中生成一个数组
-            String[] names = new String[params[0].size() - 1];
-            for (int i = 0; i < params[0].size() - 1; i++) {
-                names[i] = params[0].get(i + 1);
+            String[] names = new String[params[0].length - 1];
+            for (int i = 0; i < params[0].length - 1; i++) {
+                names[i] = params[0][i + 1];
             }
             query.addWhereContainedIn("name", Arrays.asList(names));
             query.findObjects(new FindListener<Dish>() {

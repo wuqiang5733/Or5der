@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.xuxiaoxiao.order.R;
@@ -66,4 +67,6 @@ public class DishActivity extends UniversalFragmentActivity {
     protected void onReady(Bundle state) {
 
     }
+
+
 }
